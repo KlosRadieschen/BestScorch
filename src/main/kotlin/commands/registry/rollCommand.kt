@@ -24,21 +24,22 @@ val rollCommand = SlashCommand(
 	},
 	run = { response ->
 		val max = command.integers["max"] ?: 20
+		val modifier = command.integers["modifier"]
+		val reason = command.strings["reason"]
+
 		val baseRoll = (1..max).random()
 
-		var finalRoll: String
-		val modifier = command.integers["modifier"]
-		finalRoll = if (modifier != null) {
-			"${baseRoll + modifier}($baseRoll + $modifier)/$max"
-		} else {
-			"$baseRoll/$max"
+		val content = buildString {
+			if (reason != null) append("Rolling for $reason\n")
+			append(
+				if (modifier != null) {
+					"${baseRoll + modifier} ($baseRoll + $modifier)/$max"
+				} else {
+					"$baseRoll/$max"
+				}
+			)
 		}
 
-		val reason = command.strings["reason"]
-		if (reason != null) {
-			response.respond { content = "Rolling for $reason\n$finalRoll" }
-		} else {
-			response.respond { content = finalRoll }
-		}
+		response.respond { this.content = content }
 	}
 )

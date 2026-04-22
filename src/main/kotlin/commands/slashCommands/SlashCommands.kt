@@ -6,26 +6,17 @@ import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEve
 import dev.kord.core.on
 
 class SlashCommands {
-	private val commands: ArrayList<SlashCommand> = listOf(
-		testCommand,
-		rollCommand
-	) as ArrayList<SlashCommand>
+	private val commands: Map<String, SlashCommand> = mapOf(
+		testCommand.name to testCommand,
+		rollCommand.name to rollCommand
+	)
 
-	suspend fun createAll(kord: Kord) {
-		for (command in commands) {
-			command.create(kord)
-		}
-	}
+	suspend fun createAll(kord: Kord) = commands.values.forEach { it.create(kord) }
 
 	fun registerAll(kord: Kord) {
 		kord.on<GuildChatInputCommandInteractionCreateEvent> {
 			val response = interaction.deferPublicResponse()
-
-			for (command in commands) {
-				if (interaction.data.data.name.value.equals(command.name)) {
-					command.run(interaction, response)
-				}
-			}
+			commands[interaction.data.data.name.value]!!.run(interaction, response)
 		}
 	}
 }
