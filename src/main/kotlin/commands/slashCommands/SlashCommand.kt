@@ -1,4 +1,4 @@
-package dev.kord.core.slashCommands
+package dev.kord.core.commands.slashCommands
 
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
