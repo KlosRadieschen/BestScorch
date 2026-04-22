@@ -19,4 +19,12 @@ class SlashCommands {
 			commands[interaction.data.data.name.value]!!.run(interaction, response)
 		}
 	}
+
+	suspend fun deleteOld(kord: Kord) {
+		val commands = kord.getGuildApplicationCommands(SlashCommand.guildID)
+
+		commands.collect { command ->
+			command.delete()
+		}
+	}
 }

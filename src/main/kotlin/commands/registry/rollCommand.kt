@@ -18,9 +18,6 @@ val rollCommand = SlashCommand(
 		integer("modifier", "The modifier to add to the roll (default: 0)") {
 			required = false
 		}
-		//integer("advantage", "You can roll with advantage or disadvantage") {
-		//	required = false
-		//}
 	},
 	run = { response ->
 		val max = command.integers["max"] ?: 20
