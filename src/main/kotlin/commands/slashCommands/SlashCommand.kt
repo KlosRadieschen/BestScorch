@@ -1,10 +1,11 @@
-package dev.kord.core.commands.slashCommands
+package commands.slashCommands
 
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.DeferredPublicMessageInteractionResponseBehavior
 import dev.kord.core.entity.interaction.GuildChatInputCommandInteraction
 import dev.kord.rest.builder.interaction.ChatInputCreateBuilder
+import io.github.cdimascio.dotenv.Dotenv
 
 
 class SlashCommand(
@@ -14,7 +15,7 @@ class SlashCommand(
 	val run: suspend GuildChatInputCommandInteraction.(DeferredPublicMessageInteractionResponseBehavior) -> Unit,
 ) {
 	companion object {
-		val guildID = Snowflake(1195135473006420048)
+		val guildID = Snowflake(Dotenv.load().get("AHA_GUILD_ID"))
 	}
 
 	suspend fun create(kord: Kord) {

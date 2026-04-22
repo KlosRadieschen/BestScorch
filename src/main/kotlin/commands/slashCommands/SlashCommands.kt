@@ -1,14 +1,23 @@
-package dev.kord.core.commands.slashCommands
+package commands.slashCommands
 
+import commands.registry.executeCommand
+import commands.registry.reviveAllCommand
+import commands.registry.reviveCommand
+import commands.registry.rollCommand
+import commands.registry.testCommand
 import dev.kord.core.Kord
-import dev.kord.core.commands.registry.*
+import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
+import kotlin.collections.get
 
 class SlashCommands {
 	private val commands: Map<String, SlashCommand> = mapOf(
 		testCommand.name to testCommand,
-		rollCommand.name to rollCommand
+		rollCommand.name to rollCommand,
+		executeCommand.name to executeCommand,
+		reviveCommand.name to reviveCommand,
+		reviveAllCommand.name to reviveAllCommand
 	)
 
 	suspend fun createAll(kord: Kord) = commands.values.forEach { it.create(kord) }
@@ -16,13 +25,17 @@ class SlashCommands {
 	fun registerAll(kord: Kord) {
 		kord.on<GuildChatInputCommandInteractionCreateEvent> {
 			val response = interaction.deferPublicResponse()
-			commands[interaction.data.data.name.value]!!.run(interaction, response)
+			try {
+				commands[interaction.data.data.name.value]!!.run(interaction, response)
+			} catch (e: Exception) {
+				response.respond { content = e.message }
+			}
+
 		}
 	}
 
 	suspend fun deleteOld(kord: Kord) {
 		val commands = kord.getGuildApplicationCommands(SlashCommand.guildID)
-
 		commands.collect { command ->
 			command.delete()
 		}

@@ -1,7 +1,7 @@
-package dev.kord.core.commands.registry
+package commands.registry
 
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.commands.slashCommands.SlashCommand
+import commands.slashCommands.SlashCommand
 import dev.kord.rest.builder.interaction.integer
 import dev.kord.rest.builder.interaction.string
 

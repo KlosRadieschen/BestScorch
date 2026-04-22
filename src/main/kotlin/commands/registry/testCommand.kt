@@ -1,7 +1,7 @@
-package dev.kord.core.commands.registry
+package commands.registry
 
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.commands.slashCommands.SlashCommand
+import commands.slashCommands.SlashCommand
 
 val testCommand = SlashCommand(
 	name = "test",
