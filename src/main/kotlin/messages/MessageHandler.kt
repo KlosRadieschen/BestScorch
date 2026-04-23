@@ -8,8 +8,13 @@ import dev.kord.core.on
 class MessageHandler {
 	fun init(kord: Kord) {
 		kord.on<MessageCreateEvent> {
-			if (message.author?.isBot == true) return@on
-			if (Execution.isExecuted(message.author?.id?.value.toString())) message.delete()
+			val author = message.author ?: return@on
+			if (author.isBot) return@on
+
+			val authorId = author.id.value.toString()
+			if (Execution.isExecuted(authorId)) {
+				message.delete()
+			}
 		}
 	}
 }
