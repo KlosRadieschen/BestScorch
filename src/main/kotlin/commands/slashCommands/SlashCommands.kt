@@ -1,10 +1,6 @@
 package commands.slashCommands
 
-import commands.registry.executeCommand
-import commands.registry.reviveAllCommand
-import commands.registry.reviveCommand
-import commands.registry.rollCommand
-import commands.registry.testCommand
+import commands.registry.*
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
@@ -17,7 +13,8 @@ class SlashCommands {
 		rollCommand.name to rollCommand,
 		executeCommand.name to executeCommand,
 		reviveCommand.name to reviveCommand,
-		reviveAllCommand.name to reviveAllCommand
+		reviveAllCommand.name to reviveAllCommand,
+		promoteCommand.name to promoteCommand
 	)
 
 	suspend fun createAll(kord: Kord) = commands.values.forEach { it.create(kord) }
