@@ -14,7 +14,9 @@ class SlashCommands {
 		executeCommand.name to executeCommand,
 		reviveCommand.name to reviveCommand,
 		reviveAllCommand.name to reviveAllCommand,
-		promoteCommand.name to promoteCommand
+		promoteCommand.name to promoteCommand,
+		pollCommand.name to pollCommand,
+		discussionPollCommand.name to discussionPollCommand,
 	)
 
 	suspend fun createAll(kord: Kord) = commands.values.forEach { it.create(kord) }
@@ -25,9 +27,9 @@ class SlashCommands {
 			try {
 				commands[interaction.data.data.name.value]!!.run(interaction, response)
 			} catch (e: Exception) {
-				response.respond { content = e.message }
+				e.printStackTrace()
+				response.respond { content = "${e.message} <:verger:1225937868023795792>" }
 			}
-
 		}
 	}
 

@@ -9,8 +9,8 @@ suspend fun main() {
 	val kord = Kord(Dotenv.load().get("BOT_TOKEN"))
 
 	val slashCommands = SlashCommands()
-	slashCommands.deleteOld(kord)
-	slashCommands.createAll(kord)
+	//slashCommands.deleteOld(kord)
+	//slashCommands.createAll(kord)
 	slashCommands.registerAll(kord)
 
 	val messageHandler = MessageHandler()
