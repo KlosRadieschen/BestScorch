@@ -11,7 +11,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 
 
-val pollCommand = SlashCommand(
+object PollCommand : SlashCommand(
 	name = "poll",
 	description = "Create the best polls on Discord",
 	args = {

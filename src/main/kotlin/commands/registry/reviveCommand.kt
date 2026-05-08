@@ -8,7 +8,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.user
 import io.github.cdimascio.dotenv.Dotenv
 
-val reviveCommand = SlashCommand(
+object ReviveCommand : SlashCommand(
 	name = "revive",
 	description = "UNMURDER",
 	args = {
@@ -16,10 +16,10 @@ val reviveCommand = SlashCommand(
 			required = true
 		}
 	},
-	run = { response ->
+	run = commandRun@{ response ->
 		if (!AdminAbusers.isAdminAbuser(user.id.value)) {
 			response.respond { content = "You are not an admin abuser" }
-			return@SlashCommand
+			return@commandRun
 		}
 
 		val revivee = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!

@@ -1,24 +1,24 @@
 package commands.slashCommands
 
-import commands.registry.*
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
-import kotlin.collections.get
+import io.github.classgraph.ClassGraph
 
 class SlashCommands {
-	private val commands: Map<String, SlashCommand> = mapOf(
-		testCommand.name to testCommand,
-		rollCommand.name to rollCommand,
-		executeCommand.name to executeCommand,
-		reviveCommand.name to reviveCommand,
-		reviveAllCommand.name to reviveAllCommand,
-		promoteCommand.name to promoteCommand,
-		pollCommand.name to pollCommand,
-		discussionPollCommand.name to discussionPollCommand,
-		tictactoeCommand.name to tictactoeCommand,
-	)
+	private val commands: Map<String, SlashCommand> =
+		ClassGraph()
+			.enableClassInfo()
+			.acceptPackages("commands.registry")
+			.scan()
+			.use { scanResult ->
+				scanResult
+					.getSubclasses(SlashCommand::class.qualifiedName)
+					.loadClasses(SlashCommand::class.java)
+					.mapNotNull { clazz -> clazz.kotlin.objectInstance }
+					.associateBy { it.name }
+			}
 
 	suspend fun createAll(kord: Kord) = commands.values.forEach { it.create(kord) }
 

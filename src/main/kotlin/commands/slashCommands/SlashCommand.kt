@@ -8,7 +8,7 @@ import dev.kord.rest.builder.interaction.ChatInputCreateBuilder
 import io.github.cdimascio.dotenv.Dotenv
 
 
-class SlashCommand(
+abstract class SlashCommand(
 	val name: String,
 	val description: String,
 	val args: ChatInputCreateBuilder.() -> Unit,

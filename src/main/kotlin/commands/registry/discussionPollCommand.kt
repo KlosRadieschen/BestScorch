@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration
 
 
-val discussionPollCommand = SlashCommand(
+object DiscussionPollCommand : SlashCommand(
 	name = "discussion-poll",
 	description = "Create the best polls on Discord",
 	args = {

@@ -10,7 +10,7 @@ import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.interaction.user
 import kotlinx.coroutines.flow.toSet
 
-val promoteCommand = SlashCommand(
+object PromoteCommand : SlashCommand(
 	name = "promote",
 	description = "Promote or demote a user",
 	args = {
@@ -20,11 +20,11 @@ val promoteCommand = SlashCommand(
 		integer("steps", "The amount of ranks to go up/down (Default: 1)")
 		string("reason", "Reason for the promotion/demotion")
 	},
-	run = { response ->
+	run = commandRun@{ response ->
 		val targetMember = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(SlashCommand.guildID)
 		if (!AdminAbusers.isAdminAbuser(user.id.value)) {
 			response.respond { content = "You are not an admin abuser" }
-			return@SlashCommand
+			return@commandRun
 		}
 
 		val steps = (command.integers["steps"] ?: 1).toInt()

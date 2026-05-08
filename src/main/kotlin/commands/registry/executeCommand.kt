@@ -8,7 +8,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.user
 import io.github.cdimascio.dotenv.Dotenv
 
-val executeCommand = SlashCommand(
+object ExecuteCommand : SlashCommand(
 	name = "execute",
 	description = "MURDER",
 	args = {

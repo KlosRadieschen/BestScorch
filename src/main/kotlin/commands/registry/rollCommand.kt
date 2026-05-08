@@ -1,11 +1,11 @@
 package commands.registry
 
-import dev.kord.core.behavior.interaction.response.respond
 import commands.slashCommands.SlashCommand
+import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.integer
 import dev.kord.rest.builder.interaction.string
 
-val rollCommand = SlashCommand(
+object RollCommand : SlashCommand(
 	name = "roll",
 	description = "GAMBLING!",
 	args = {

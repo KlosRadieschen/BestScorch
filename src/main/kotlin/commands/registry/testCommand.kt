@@ -1,9 +1,9 @@
 package commands.registry
 
-import dev.kord.core.behavior.interaction.response.respond
 import commands.slashCommands.SlashCommand
+import dev.kord.core.behavior.interaction.response.respond
 
-val testCommand = SlashCommand(
+object TestCommand : SlashCommand(
 	name = "test",
 	description = "Test if this fucker is online",
 	args = {},

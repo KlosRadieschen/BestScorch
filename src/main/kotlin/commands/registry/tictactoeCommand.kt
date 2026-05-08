@@ -9,7 +9,7 @@ import dev.kord.core.entity.channel.GuildMessageChannel
 import io.github.cdimascio.dotenv.Dotenv
 import kotlin.random.Random
 
-val tictactoeCommand = SlashCommand(
+object TictactoeCommand : SlashCommand(
 	name = "tictactoe",
 	description = "Play against the smartest AI in human history",
 	args = {

@@ -7,14 +7,14 @@ import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.response.respond
 import io.github.cdimascio.dotenv.Dotenv
 
-val reviveAllCommand = SlashCommand(
+object ReviveAllCommand : SlashCommand(
 	name = "reviveall",
 	description = "UNMURDER everyone",
 	args = {},
-	run = { response ->
+	run = commandRun@{ response ->
 		if (!AdminAbusers.isAdminAbuser(user.id.value)) {
 			response.respond { content = "You are not an admin abuser" }
-			return@SlashCommand
+			return@commandRun
 		}
 
 		Execution.executees.forEach { executee ->
