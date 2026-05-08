@@ -17,6 +17,7 @@ class SlashCommands {
 		promoteCommand.name to promoteCommand,
 		pollCommand.name to pollCommand,
 		discussionPollCommand.name to discussionPollCommand,
+		tictactoeCommand.name to tictactoeCommand,
 	)
 
 	suspend fun createAll(kord: Kord) = commands.values.forEach { it.create(kord) }

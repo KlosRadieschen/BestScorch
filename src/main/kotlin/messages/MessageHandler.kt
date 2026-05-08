@@ -14,6 +14,8 @@ class MessageHandler {
 			val authorId = author.id.value.toString()
 			if (Execution.isExecuted(authorId)) {
 				message.delete()
+			} else {
+				TicTacToeMessages.evaluate(kord, message)
 			}
 		}
 	}
