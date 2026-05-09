@@ -1,9 +1,7 @@
 package messages
 
-import ai.LLM
 import commands.helpers.Execution
 import dev.kord.core.Kord
-import dev.kord.core.behavior.reply
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.core.on
 
@@ -13,7 +11,7 @@ class MessageHandler {
 			val author = message.author ?: return@on
 			if (author.isBot) return@on
 
-			if (Execution.isExecuted(author.id.value.toString())) {
+			if (Execution.isExecuted(author.id)) {
 				message.delete()
 			} else {
 				LLMResponder.respond(message)

@@ -21,8 +21,8 @@ object PromoteCommand : SlashCommand(
 		string("reason", "Reason for the promotion/demotion")
 	},
 	run = commandRun@{ response ->
-		val targetMember = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(SlashCommand.guildID)
-		if (!AdminAbusers.isAdminAbuser(user.id.value)) {
+		val targetMember = kord.getUser(command.users["user"]!!.id)!!.asMember(SlashCommand.guildID)
+		if (!AdminAbusers.isAdminAbuser(user.id)) {
 			response.respond { content = "You are not an admin abuser" }
 			return@commandRun
 		}

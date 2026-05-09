@@ -17,7 +17,7 @@ object ExecuteCommand : SlashCommand(
 	},
 	run = { response ->
 		val target = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!
-		val executee = if (AdminAbusers.isAdminAbuser(user.id.value)) target else user
+		val executee = if (AdminAbusers.isAdminAbuser(user.id)) target else user
 
 		Execution.execute(executee)
 

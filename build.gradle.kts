@@ -19,14 +19,14 @@ dependencies {
     implementation("com.github.haifengl:smile-core:3.0.2")
     implementation("org.bytedeco:openblas-platform:0.3.26-1.5.10")
 
-    implementation("com.openai:openai-java:4.1.0")
+    implementation("com.openai:openai-java:latest.release")
 
-    implementation("io.github.classgraph:classgraph:4.8.179")
+    implementation("io.github.classgraph:classgraph:latest.release")
     implementation(kotlin("reflect"))
 
     implementation("io.github.oshai:kotlin-logging-jvm:latest.release")
     implementation("io.github.cdimascio:dotenv-kotlin:latest.release")
-    implementation("dev.kord:kord-core:0.18.1")
+    implementation("dev.kord:kord-core:latest.release")
 }
 
 kotlin {

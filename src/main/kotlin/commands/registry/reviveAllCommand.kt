@@ -10,7 +10,7 @@ object ReviveAllCommand : SlashCommand(
 	description = "UNMURDER everyone",
 	args = {},
 	run = commandRun@{ response ->
-		if (!AdminAbusers.isAdminAbuser(user.id.value)) {
+		if (!AdminAbusers.isAdminAbuser(user.id)) {
 			response.respond { content = "You are not an admin abuser" }
 			return@commandRun
 		} else if (!Execution.isAnyoneExecuted()) {

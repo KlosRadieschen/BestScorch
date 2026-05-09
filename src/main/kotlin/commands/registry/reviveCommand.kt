@@ -16,14 +16,14 @@ object ReviveCommand : SlashCommand(
 		}
 	},
 	run = commandRun@{ response ->
-		if (!AdminAbusers.isAdminAbuser(user.id.value)) {
+		if (!AdminAbusers.isAdminAbuser(user.id)) {
 			response.respond { content = "You are not an admin abuser" }
 			return@commandRun
-		} else if (!Execution.isExecuted(command.users["user"]!!.id.value.toString())) {
+		} else if (!Execution.isExecuted(command.users["user"]!!.id)) {
 			error("User is not executed")
 		}
 
-		val revivee = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!
+		val revivee = kord.getUser(command.users["user"]!!.id)!!
 		Execution.revive(revivee)
 
 		response.respond { content = "${revivee.mention} was UNMURDERED" }
