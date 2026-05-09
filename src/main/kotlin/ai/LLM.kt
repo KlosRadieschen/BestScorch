@@ -1,4 +1,4 @@
-package commands.ai
+package ai
 
 import com.openai.client.OpenAIClient
 import com.openai.client.okhttp.OpenAIOkHttpClient

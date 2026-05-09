@@ -1,6 +1,6 @@
 package commands.registry
 
-import commands.ai.LLM
+import ai.LLM
 import commands.helpers.Execution
 import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
