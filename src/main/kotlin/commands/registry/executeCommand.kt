@@ -6,7 +6,6 @@ import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.user
-import io.github.cdimascio.dotenv.Dotenv
 
 object ExecuteCommand : SlashCommand(
 	name = "execute",

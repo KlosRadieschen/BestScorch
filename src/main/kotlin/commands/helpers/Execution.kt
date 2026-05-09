@@ -28,4 +28,5 @@ object Execution {
 	}
 
 	fun isExecuted(userID: String) = executees.contains(userID)
+	fun isAnyoneExecuted() = executees.isNotEmpty()
 }
