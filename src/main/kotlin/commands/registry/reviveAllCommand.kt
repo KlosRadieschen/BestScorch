@@ -17,11 +17,7 @@ object ReviveAllCommand : SlashCommand(
 			return@commandRun
 		}
 
-		Execution.executees.forEach { executee ->
-			val revivee = kord.getUser(Snowflake(executee))!!
-			revivee.asMember(SlashCommand.guildID).removeRole(Snowflake(Dotenv.load().get("EXECUTED_ROLE_ID")))
-		}
-		Execution.reviveAll()
+		Execution.reviveAll(kord)
 
 		response.respond { content = "Everyone was UNMURDERED" }
 	}

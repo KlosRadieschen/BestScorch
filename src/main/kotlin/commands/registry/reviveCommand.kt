@@ -24,8 +24,7 @@ object ReviveCommand : SlashCommand(
 
 		val revivee = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!
 
-		revivee.asMember(SlashCommand.guildID).removeRole(Snowflake(Dotenv.load().get("EXECUTED_ROLE_ID")))
-		Execution.revive(revivee.id.value.toString())
+		Execution.revive(revivee)
 
 		response.respond { content = "${revivee.mention} was UNMURDERED" }
 	}

@@ -7,6 +7,7 @@ import dev.kord.common.toMessageFormat
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.TextChannelBehavior
 import dev.kord.core.behavior.edit
+import dev.kord.core.entity.Message
 import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.User
 import io.github.cdimascio.dotenv.Dotenv
@@ -30,7 +31,7 @@ class Poll (
 			is PollResponses.Options -> {
 				val emojis = listOf("🔥","🍷","💀","👻","🎶","💦","🫠","☕","🕊","💜").take(responses.votes.size)
 
-				var msg = channel.createMessage(buildString {
+				var msg: Message? = channel.createMessage(buildString {
 					append("# $question\n(Poll by ${user.mention})\n")
 					append("Poll expires ${Instant.fromEpochMilliseconds(System.currentTimeMillis()+duration.inWholeMilliseconds).toMessageFormat(DiscordTimestampStyle.RelativeTime)}")
 					for ((i, emoji) in emojis.withIndex()) {
@@ -39,39 +40,43 @@ class Poll (
 					}
 				})
 
-				DiscordTimestampStyle.RelativeTime
-				for (emoji in emojis) msg.addReaction(ReactionEmoji.Unicode(emoji))
+				for (emoji in emojis) msg!!.addReaction(ReactionEmoji.Unicode(emoji))
 
-				channel.startPublicThreadWithMessage(msg.id, "Discussion") {
+				channel.startPublicThreadWithMessage(msg!!.id, "Discussion") {
 					autoArchiveDuration = ArchiveDuration.Week
 				}
 
 				sleep(duration.inWholeMilliseconds)
 
-				msg = channel.getMessage(msg.id)
-				for ((i, reaction) in msg.reactions.take(responses.votes.size).withIndex()) {
-					reaction.emoji
-					responses.votes[i] = reaction.count-1
-				}
+				msg = channel.getMessageOrNull(msg.id)
 
-				val totalVotes = responses.votes.sum()
+				msg?.let {
+					val reactionsByEmoji = msg.reactions.associateBy { it.emoji }
 
-				msg.edit {
-					content = buildString {
-						append("# $question\n(Poll by ${user.mention})\n")
-						append("Poll expired ${Instant.fromEpochMilliseconds(System.currentTimeMillis()).toMessageFormat(DiscordTimestampStyle.RelativeTime)}")
-						for ((i, emoji) in emojis.withIndex()) {
-							val percentage = if (totalVotes > 0) {
-								responses.votes[i] * 100.0 / totalVotes
-							} else {
-								0.0
+					for ((i, emoji) in emojis.withIndex()) {
+						val reaction = reactionsByEmoji[ReactionEmoji.Unicode(emoji)]
+						responses.votes[i] = reaction?.count?.coerceAtLeast(0) ?: 0
+					}
+
+					val totalVotes = responses.votes.sum()
+
+					msg.edit {
+						content = buildString {
+							append("# $question\n(Poll by ${user.mention})\n")
+							append("Poll expired ${Instant.fromEpochMilliseconds(System.currentTimeMillis()).toMessageFormat(DiscordTimestampStyle.RelativeTime)}")
+							for ((i, emoji) in emojis.withIndex()) {
+								val percentage = if (totalVotes > 0) {
+									responses.votes[i] * 100.0 / totalVotes
+								} else {
+									0.0
+								}
+
+								append("\n$emoji ")
+								append("(${responses.votes[i]} ")
+								if (responses.votes[i] == 1) append("vote") else append("votes")
+								append(", ${percentage.toInt()}%): ")
+								append(responses.values[i])
 							}
-
-							append("\n$emoji ")
-							append("(${responses.votes[i]} ")
-							if (responses.votes[i] == 1) append("vote") else append("votes")
-							append(", ${percentage.toInt()}%): ")
-							append(responses.values[i])
 						}
 					}
 				}

@@ -19,6 +19,8 @@ dependencies {
     implementation("com.github.haifengl:smile-core:3.0.2")
     implementation("org.bytedeco:openblas-platform:0.3.26-1.5.10")
 
+    implementation("com.openai:openai-java:4.1.0")
+
     implementation("io.github.classgraph:classgraph:4.8.179")
     implementation(kotlin("reflect"))
 

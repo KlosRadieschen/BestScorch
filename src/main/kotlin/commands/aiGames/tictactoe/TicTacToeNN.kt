@@ -1,12 +1,8 @@
 package commands.aiGames.tictactoe
 
 import smile.classification.MLP
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.io.Serializable
-import java.util.Properties
+import java.io.*
+import java.util.*
 import kotlin.math.max
 
 private const val LABEL_LOSS = 0

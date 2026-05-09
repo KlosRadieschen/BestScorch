@@ -20,8 +20,7 @@ object ExecuteCommand : SlashCommand(
 		val target = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!
 		val executee = if (AdminAbusers.isAdminAbuser(user.id.value)) target else user
 
-		executee.asMember(SlashCommand.guildID).addRole(Snowflake(Dotenv.load().get("EXECUTED_ROLE_ID")))
-		Execution.execute(executee.id.value.toString())
+		Execution.execute(executee)
 
 		response.respond { content = "${executee.mention} was MURDERED" }
 	}
