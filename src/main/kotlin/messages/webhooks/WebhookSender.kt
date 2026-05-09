@@ -2,8 +2,9 @@ package messages.webhooks
 
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
-import dev.kord.core.behavior.channel.createWebhook
+import dev.kord.core.behavior.edit
 import dev.kord.core.behavior.execute
+import kotlinx.coroutines.flow.first
 
 object WebhookSender {
 	suspend fun sendAs(
@@ -16,9 +17,11 @@ object WebhookSender {
 		val channel = kord.getChannelOf<dev.kord.core.entity.channel.TextChannel>(channelID)
 			?: error("Channel $channelID not found")
 
-		val webhook = channel.createWebhook(name)
+		val webhooks = channel.guild.webhooks
+		val botWebhook = webhooks.first { it.creatorId == kord.selfId }
 
-		webhook.execute(webhook.token!!) {
+		botWebhook.edit { channelId = channel.id }
+		botWebhook.execute(botWebhook.token!!) {
 			content = message
 			username = name
 			avatarUrl = profilePictureLink

@@ -1,6 +1,7 @@
 package commands.registry
 
 import ai.LLM
+import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Execution
 import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
@@ -21,6 +22,8 @@ object AIExecuteCommand : SlashCommand(
 		}
 	},
 	run = { response ->
+		if (isAdminAbuser(command.users["user"]!!.id)) error("Target is an admin abuser")
+
 		val assailantName = user.effectiveName
 		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(SlashCommand.guildID).effectiveName
 		val reasoning = command.strings["reasoning"]!!

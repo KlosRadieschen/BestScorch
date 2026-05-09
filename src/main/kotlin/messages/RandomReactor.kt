@@ -7,7 +7,7 @@ import dev.kord.core.entity.Message
 import kotlin.random.Random
 
 object RandomReactor {
-	const val REACTIONCHANCE = 1000
+	const val REACTIONCHANCE = 100
 
 	suspend fun randomReact(kord: Kord, message: Message) {
 		if (Random.nextInt(REACTIONCHANCE) == 0) {

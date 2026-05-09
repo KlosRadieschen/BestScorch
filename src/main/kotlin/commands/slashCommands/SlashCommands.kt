@@ -29,7 +29,7 @@ class SlashCommands {
 				commands[interaction.data.data.name.value]!!.run(interaction, response)
 			} catch (e: Exception) {
 				e.printStackTrace()
-				response.respond { content = "${e.message} <:verger:1225937868023795792>" }
+				response.respond { content = "ERROR: ${e.message} <:verger:1225937868023795792>" }
 			}
 		}
 	}
