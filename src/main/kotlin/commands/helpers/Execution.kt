@@ -9,14 +9,14 @@ import io.github.cdimascio.dotenv.Dotenv
 object Execution {
 	val executees: MutableSet<Snowflake> = mutableSetOf()
 
-	suspend fun execute(user: User) {
-		user.asMember(SlashCommand.guildID).addRole(Snowflake(Dotenv.load().get("EXECUTED_ROLE_ID")))
-		executees.add(user.id)
+	suspend fun User.execute() {
+		this.asMember(SlashCommand.guildID).addRole(Snowflake(Dotenv.load().get("EXECUTED_ROLE_ID")))
+		executees.add(this.id)
 	}
 
-	suspend fun revive(user: User) {
-		user.asMember(SlashCommand.guildID).removeRole(Snowflake(Dotenv.load().get("EXECUTED_ROLE_ID")))
-		executees.remove(user.id)
+	suspend fun User.revive() {
+		this.asMember(SlashCommand.guildID).removeRole(Snowflake(Dotenv.load().get("EXECUTED_ROLE_ID")))
+		executees.remove(this.id)
 	}
 
 	suspend fun reviveAll(kord: Kord) {
@@ -27,6 +27,7 @@ object Execution {
 		executees.clear()
 	}
 
-	fun isExecuted(userID: Snowflake) = executees.contains(userID)
+	fun User.isExecuted() = executees.contains(this.id)
+
 	fun isAnyoneExecuted() = executees.isNotEmpty()
 }

@@ -1,6 +1,7 @@
 package commands.helpers
 
 import dev.kord.common.entity.Snowflake
+import dev.kord.core.entity.User
 import kotlin.time.Instant
 
 data class ExposeMessage(val message: String, val timestamp: Instant)
@@ -8,11 +9,11 @@ data class ExposeMessage(val message: String, val timestamp: Instant)
 object Exposer {
 	private val messages: MutableMap<Snowflake, ArrayDeque<ExposeMessage>> = mutableMapOf()
 
-	fun push(key: Snowflake, em: ExposeMessage) {
-		val queue = messages.getOrPut(key) { ArrayDeque() }
+	fun User.addExposeMessage(em: ExposeMessage) {
+		val queue = messages.getOrPut(this.id) { ArrayDeque() }
 		if (queue.size >= 5) queue.removeLast()
 		queue.addFirst(em)
 	}
 
-	fun getAll(key: Snowflake): List<ExposeMessage> = messages[key]?.toList() ?: emptyList()
+	fun User.getExposeMessages() = messages[this.id]?.toList() ?: emptyList()
 }

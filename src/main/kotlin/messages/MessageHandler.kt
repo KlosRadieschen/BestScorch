@@ -1,6 +1,6 @@
 package messages
 
-import commands.helpers.Execution
+import commands.helpers.Execution.isExecuted
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.entity.channel.GuildMessageChannel
@@ -17,7 +17,7 @@ class MessageHandler {
 			try {
 				ExposerHandler.handleExpose(author, message)
 
-				if (Execution.isExecuted(author.id)) {
+				if (author.isExecuted()) {
 					message.delete()
 				} else {
 					LLMResponder.respond(message)

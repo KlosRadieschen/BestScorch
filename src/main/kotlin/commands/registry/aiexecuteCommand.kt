@@ -1,8 +1,8 @@
 package commands.registry
 
 import ai.LLM
-import commands.helpers.AdminAbusers.isAdminAbuser
-import commands.helpers.Execution
+import commands.helpers.AdminAbusers.isImmune
+import commands.helpers.Execution.execute
 import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.response.respond
@@ -22,7 +22,7 @@ object AIExecuteCommand : SlashCommand(
 		}
 	},
 	run = { response ->
-		if (isAdminAbuser(command.users["user"]!!.id)) error("Target is an admin abuser")
+		if (command.users["user"]!!.isImmune()) error("Target is an admin abuser")
 
 		val assailantName = user.effectiveName
 		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(SlashCommand.guildID).effectiveName
@@ -33,11 +33,11 @@ object AIExecuteCommand : SlashCommand(
 		WebhookSender.sendAs(kord, "Carl Jebediah", "https://preview.redd.it/my-favorite-clanker-moment-in-jedi-survivor-v0-wuneb16cbc1b1.jpeg?width=960&format=pjpg&auto=webp&s=82f3e54ad48edc2316b746de7f66da298424890c", aiResponse, channelId)
 
 		when {
-			aiResponse.contains("ASSAILANT DIES") -> Execution.execute(user)
-			aiResponse.contains("TARGET DIES") -> Execution.execute(command.users["user"]!!)
+			aiResponse.contains("ASSAILANT DIES") -> user.execute()
+			aiResponse.contains("TARGET DIES") -> command.users["user"]!!.execute()
 			aiResponse.contains("BOTH DIE") -> {
-				Execution.execute(user)
-				Execution.execute(command.users["user"]!!)
+				user.execute()
+				command.users["user"]!!.execute()
 			}
 		}
 	}

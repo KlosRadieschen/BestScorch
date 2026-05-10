@@ -1,12 +1,10 @@
 package commands.registry
 
-import commands.helpers.AdminAbusers
-import commands.helpers.Execution
 import commands.helpers.Exposer
+import commands.helpers.Exposer.getExposeMessages
 import commands.slashCommands.SlashCommand
 import dev.kord.common.Color
 import dev.kord.common.DiscordTimestampStyle
-import dev.kord.common.entity.Snowflake
 import dev.kord.common.toMessageFormat
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.user
@@ -21,13 +19,13 @@ object ExposeCommand : SlashCommand(
 		}
 	},
 	run = commandRun@{ response ->
-		if (Exposer.getAll(command.users["user"]!!.id).isEmpty()) error("No saved messages for this user")
+		if (command.users["user"]!!.getExposeMessages().isEmpty()) error("No saved messages for this user")
 
 		response.respond {
 			embed {
 				color = Color(0xFF69B4)
 
-				Exposer.getAll(command.users["user"]!!.id).reversed().forEach {
+				command.users["user"]!!.getExposeMessages().reversed().forEach {
 					field {
 						value = buildString {
 							appendLine(it.message)
