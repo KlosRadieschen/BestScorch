@@ -1,6 +1,7 @@
 package commands.helpers
 
 import dev.kord.common.entity.Snowflake
+import dev.kord.core.entity.User
 import kotlin.time.Instant
 
 data class ExposeMessage(val message: String, val timestamp: Instant)
@@ -14,5 +15,8 @@ object Exposer {
 		queue.addFirst(em)
 	}
 
+	fun User.getExposeMessages() = messages[this.id]?.toList() ?: emptyList()
+
+	@Deprecated("Call directly on user")
 	fun getAll(key: Snowflake): List<ExposeMessage> = messages[key]?.toList() ?: emptyList()
 }

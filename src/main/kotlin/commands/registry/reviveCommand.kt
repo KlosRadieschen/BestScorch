@@ -1,9 +1,9 @@
 package commands.registry
 
-import commands.helpers.AdminAbusers
-import commands.helpers.Execution
+import commands.helpers.AdminAbusers.isAdminAbuser
+import commands.helpers.Execution.isExecuted
+import commands.helpers.Execution.revive
 import commands.slashCommands.SlashCommand
-import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.user
 
@@ -16,15 +16,15 @@ object ReviveCommand : SlashCommand(
 		}
 	},
 	run = commandRun@{ response ->
-		if (!AdminAbusers.isAdminAbuser(user.id)) {
+		if (!user.isAdminAbuser()) {
 			response.respond { content = "You are not an admin abuser" }
 			return@commandRun
-		} else if (!Execution.isExecuted(command.users["user"]!!.id)) {
+		} else if (!command.users["user"]!!.isExecuted()) {
 			error("User is not executed")
 		}
 
 		val revivee = kord.getUser(command.users["user"]!!.id)!!
-		Execution.revive(revivee)
+		revivee.revive()
 
 		response.respond { content = "${revivee.mention} was UNMURDERED" }
 	}

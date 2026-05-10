@@ -1,6 +1,6 @@
 package commands.registry
 
-import commands.helpers.AdminAbusers
+import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Ranks
 import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
@@ -22,7 +22,7 @@ object PromoteCommand : SlashCommand(
 	},
 	run = commandRun@{ response ->
 		val targetMember = kord.getUser(command.users["user"]!!.id)!!.asMember(SlashCommand.guildID)
-		if (!AdminAbusers.isAdminAbuser(user.id)) {
+		if (!user.isAdminAbuser()) {
 			response.respond { content = "You are not an admin abuser" }
 			return@commandRun
 		}
