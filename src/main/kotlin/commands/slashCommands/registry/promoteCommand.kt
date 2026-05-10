@@ -1,14 +1,13 @@
-package commands.registry
+package commands.slashCommands.registry
 
 import commands.helpers.AdminAbusers.isAdminAbuser
-import commands.helpers.Ranks
+import commands.helpers.Ranks.promote
 import commands.slashCommands.SlashCommand
-import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.core.supplier.EntitySupplyStrategy
 import dev.kord.rest.builder.interaction.integer
 import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.interaction.user
-import kotlinx.coroutines.flow.toSet
 
 object PromoteCommand : SlashCommand(
 	name = "promote",
@@ -20,23 +19,18 @@ object PromoteCommand : SlashCommand(
 		integer("steps", "The amount of ranks to go up/down (Default: 1)")
 		string("reason", "Reason for the promotion/demotion")
 	},
-	run = commandRun@{ response ->
-		val targetMember = kord.getUser(command.users["user"]!!.id)!!.asMember(SlashCommand.guildID)
-		if (!user.isAdminAbuser()) {
-			response.respond { content = "You are not an admin abuser" }
-			return@commandRun
-		}
+	run = { response ->
+		val targetMember = kord.getUser(command.users["user"]!!.id)!!.withStrategy(EntitySupplyStrategy.rest).asMember(guildID)
+		if (!user.isAdminAbuser()) error("You are not an admin abuser")
 
 		val steps = (command.integers["steps"] ?: 1).toInt()
 
-		val oldRank = Ranks.findRank(targetMember.roles.toSet())
-		val newRank = Ranks.moveRank(oldRank, steps)
-		targetMember.removeRole(oldRank.id)
-		targetMember.addRole(Snowflake(newRank))
+		val newRank = targetMember.promote(kord, steps)
 
 		val content = buildString {
 			append("${targetMember.mention} has been ")
-			if (steps > 0) append("promoted:\n") else append("demoted:\n")
+			if (steps > 0) append("promoted to ") else append("demoted to ")
+			appendLine("$newRank:")
 			if (!command.strings["reason"].isNullOrBlank()) append(command.strings["reason"])
 		}
 

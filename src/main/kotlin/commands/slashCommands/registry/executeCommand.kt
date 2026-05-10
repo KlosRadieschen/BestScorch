@@ -1,4 +1,4 @@
-package commands.registry
+package commands.slashCommands.registry
 
 import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Execution.execute

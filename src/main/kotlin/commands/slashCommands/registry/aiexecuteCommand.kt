@@ -1,4 +1,4 @@
-package commands.registry
+package commands.slashCommands.registry
 
 import ai.LLM
 import commands.helpers.AdminAbusers.isImmune
@@ -25,7 +25,7 @@ object AIExecuteCommand : SlashCommand(
 		if (command.users["user"]!!.isImmune()) error("Target is an admin abuser")
 
 		val assailantName = user.effectiveName
-		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(SlashCommand.guildID).effectiveName
+		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(guildID).effectiveName
 		val reasoning = command.strings["reasoning"]!!
 
 		response.respond { content = "Summoning Carl" }

@@ -10,7 +10,7 @@ class SlashCommands {
 	private val commands: Map<String, SlashCommand> =
 		ClassGraph()
 			.enableClassInfo()
-			.acceptPackages("commands.registry")
+			.acceptPackages("commands.slashCommands.registry")
 			.scan()
 			.use { scanResult ->
 				scanResult

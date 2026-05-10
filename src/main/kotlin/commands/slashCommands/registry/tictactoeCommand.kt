@@ -1,4 +1,4 @@
-package commands.registry
+package commands.slashCommands.registry
 
 import commands.aiGames.tictactoe.Mark
 import commands.aiGames.tictactoe.TicTacToeSession

@@ -1,4 +1,4 @@
-package commands.registry
+package commands.slashCommands.registry
 
 import commands.slashCommands.SlashCommand
 import dev.kord.core.behavior.interaction.response.respond

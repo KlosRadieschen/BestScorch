@@ -1,4 +1,4 @@
-package commands.registry
+package commands.slashCommands.registry
 
 import commands.polls.Poll
 import commands.polls.PollResponses

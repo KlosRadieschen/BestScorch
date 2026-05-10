@@ -1,7 +1,6 @@
-package commands.registry
+package commands.slashCommands.registry
 
-import commands.helpers.Exposer
-import commands.helpers.Exposer.getExposeMessages
+import commands.helpers.Exposer.exposeMessages
 import commands.slashCommands.SlashCommand
 import dev.kord.common.Color
 import dev.kord.common.DiscordTimestampStyle
@@ -19,13 +18,11 @@ object ExposeCommand : SlashCommand(
 		}
 	},
 	run = commandRun@{ response ->
-		if (command.users["user"]!!.getExposeMessages().isEmpty()) error("No saved messages for this user")
-
 		response.respond {
 			embed {
 				color = Color(0xFF69B4)
 
-				command.users["user"]!!.getExposeMessages().reversed().forEach {
+				command.users["user"]!!.exposeMessages.reversed().forEach {
 					field {
 						value = buildString {
 							appendLine(it.message)
@@ -35,7 +32,7 @@ object ExposeCommand : SlashCommand(
 				}
 
 				author {
-					name = command.users["user"]!!.asMember(SlashCommand.guildID).effectiveName
+					name = command.users["user"]!!.asMember(guildID).effectiveName
 					icon = command.users["user"]!!.avatar?.cdnUrl?.toUrl()
 				}
 			}
