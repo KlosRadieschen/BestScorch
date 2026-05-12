@@ -67,7 +67,7 @@ class NeuralNetwork(
 			episodeBoards.clear()
 			retrain()
 
-			save("brain.ser")
+			save("src/main/resources/brain.ser")
 		}
 	}
 

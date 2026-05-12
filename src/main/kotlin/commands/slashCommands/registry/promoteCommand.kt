@@ -1,5 +1,6 @@
 package commands.slashCommands.registry
 
+import ai.systemCharacters.Hank
 import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Ranks.promote
 import commands.slashCommands.SlashCommand
@@ -21,7 +22,14 @@ object PromoteCommand : SlashCommand(
 	},
 	run = { response ->
 		val targetMember = kord.getUser(command.users["user"]!!.id)!!.withStrategy(EntitySupplyStrategy.rest).asMember(guildID)
-		if (!user.isAdminAbuser()) error("You are not an admin abuser")
+		if (!user.isAdminAbuser()) Hank.error<IllegalArgumentException>(
+			response,
+			defaultMsg = "You are not an admin abuser",
+			explanation = """
+				We are currently in the command "promote", which is a command that allows the "High Command" (an oligarchic circle of admin abusers) to promote or demote members of the server.
+				However, the filthy peasant "${user.effectiveName}" tried to use this command without being a member of "High Command".
+			""".trimIndent()
+		)
 
 		val steps = (command.integers["steps"] ?: 1).toInt()
 

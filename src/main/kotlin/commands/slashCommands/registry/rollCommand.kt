@@ -9,10 +9,10 @@ object RollCommand : SlashCommand(
 	name = "roll",
 	description = "GAMBLING!",
 	args = {
-		integer("max", "The highest number you can roll (default: 20)") {
+		string("reason", "What you are rolling for") {
 			required = false
 		}
-		string("reason", "What you are rolling for") {
+		integer("max", "The highest number you can roll (default: 20)") {
 			required = false
 		}
 		integer("modifier", "The modifier to add to the roll (default: 0)") {

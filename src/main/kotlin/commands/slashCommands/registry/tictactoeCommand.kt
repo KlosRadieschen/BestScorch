@@ -17,11 +17,15 @@ object TictactoeCommand : SlashCommand(
 	},
 	run = { response ->
 		val startingPlayer = if (Random.nextBoolean()) Mark.X else Mark.O
+
 		TicTacToeSession.games[user.id.value.toString()] = TicTacToeSession(TicTacToeSession.ai, startingPlayer)
+
 		if (startingPlayer == Mark.O) TicTacToeSession.games[user.id.value.toString()]!!.applyAiMove()
+
 		val chan = kord.getChannelOf<GuildMessageChannel>(Snowflake(Dotenv.load().get("BOT_CHANNEL_ID")!!))!!
 		chan.createMessage("${user.mention} type a number in the chat to place your mark")
 		chan.createMessage(TicTacToeSession.games[user.id.value.toString()]!!.toHumanReadable())
+
 		response.respond { content = "Game started" }
 	}
 )

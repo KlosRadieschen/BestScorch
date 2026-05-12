@@ -5,6 +5,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
 import io.github.classgraph.ClassGraph
+import messages.webhooks.WebhookSender.sendAs
 
 class SlashCommands {
 	private val commands: Map<String, SlashCommand> =
@@ -29,7 +30,14 @@ class SlashCommands {
 				commands[interaction.data.data.name.value]!!.run(interaction, response)
 			} catch (e: Exception) {
 				e.printStackTrace()
-				response.respond { content = "ERROR: ${e.message} <:verger:1225937868023795792>" }
+
+				sendAs(
+					kord,
+					"Hank Jabbers",
+					"https://images.meme-arsenal.com/23c24d089786aef571de84ce6672b27d.jpg",
+					e.message ?: "UNKNOWN ERROR, EVERYBODY PANIC",
+					interaction.channelId
+				)
 			}
 		}
 	}

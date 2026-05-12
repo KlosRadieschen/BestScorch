@@ -1,5 +1,6 @@
 package commands.slashCommands.registry
 
+import ai.systemCharacters.Hank
 import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Execution
 import commands.slashCommands.SlashCommand
@@ -13,15 +14,23 @@ object ReviveAllCommand : SlashCommand(
 	name = "reviveall",
 	description = "UNMURDER everyone",
 	args = {},
-	run = commandRun@{ response ->
-		if (!user.isAdminAbuser()) {
-			response.respond { content = "You are not an admin abuser" }
-			return@commandRun
-		} else if (!Execution.isAnyoneExecuted()) {
-			error("Nobody is executed")
-		}
-
-		Execution.reviveAll(kord)
+	run = { response ->
+		if (!user.isAdminAbuser()) Hank.error<IllegalArgumentException>(
+			response,
+			defaultMsg = "You are not an admin abuser",
+			explanation = """
+				We are currently in the command "reviveall", which is a command that allows the "High Command" (an oligarchic circle of admin abusers) revive previously executed members of the server.
+				However, the filthy peasant "${user.effectiveName}" tried to use this command without being a member of "High Command".
+			""".trimIndent()
+		)
+		else if (!Execution.isAnyoneExecuted()) Hank.error<IllegalArgumentException>(
+			response,
+			defaultMsg = "Nobody is executed",
+			explanation = """
+				We are currently in the command "reviveall", which is a command that allows the "High Command" (an oligarchic circle of admin abusers) to promote or demote members of the server.
+				However, "${user.effectiveName}" tried to use this command even though nobody is executed.
+			""".trimIndent()
+		)
 
 		response.respond {
 			content = buildString {
@@ -31,5 +40,7 @@ object ReviveAllCommand : SlashCommand(
 				File("src/main/resources/revive.gif").readChannel()
 			})
 		}
+
+		Execution.reviveAll(kord)
 	}
 )

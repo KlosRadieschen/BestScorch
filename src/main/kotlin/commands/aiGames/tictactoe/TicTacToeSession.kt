@@ -67,7 +67,7 @@ class TicTacToeSession(
 		val games = mutableMapOf<String, TicTacToeSession>()
 
 		public fun loadAI() {
-			ai.load("brain.ser")
+			ai.load("src/main/resources/brain.ser")
 		}
 	}
 }

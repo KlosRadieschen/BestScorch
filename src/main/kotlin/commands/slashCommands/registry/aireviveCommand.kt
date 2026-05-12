@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import ai.LLM
+import ai.systemCharacters.Carl
 import commands.helpers.Execution.execute
 import commands.helpers.Execution.revive
 import commands.slashCommands.SlashCommand
@@ -27,7 +27,9 @@ object AIReviveCommand : SlashCommand(
 		val reasoning = command.strings["reasoning"]!!
 
 		response.respond { content = "Summoning Carl" }
-		val aiResponse = LLM.judgeFate(LLM.FateMode.REVIVAL, beggarName, targetName, reasoning)
+
+		val aiResponse = Carl.judgeFate(Carl.FateMode.REVIVAL, beggarName, targetName, reasoning) ?: Carl.AWAY_MESSAGE
+
 		WebhookSender.sendAs(kord, "Carl Jebediah", "https://preview.redd.it/my-favorite-clanker-moment-in-jedi-survivor-v0-wuneb16cbc1b1.jpeg?width=960&format=pjpg&auto=webp&s=82f3e54ad48edc2316b746de7f66da298424890c", aiResponse, channelId)
 
 		when {

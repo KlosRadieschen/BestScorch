@@ -19,7 +19,6 @@ suspend fun main() {
 	val messageHandler = MessageHandler()
 	messageHandler.init(kord)
 
-
 	kord.login {
 		presence { playing("I was forced to do this") }
 		@OptIn(PrivilegedIntent::class)

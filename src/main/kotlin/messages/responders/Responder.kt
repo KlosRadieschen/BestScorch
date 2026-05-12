@@ -2,7 +2,7 @@ package messages.responders
 
 import dev.kord.core.entity.Message
 
-abstract class Responder(
+open class Responder(
 	val check: Message.() -> Boolean,
 	val execute: suspend Message.() -> Unit
 ) {
