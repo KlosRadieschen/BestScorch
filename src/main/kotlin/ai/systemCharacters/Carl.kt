@@ -27,6 +27,7 @@ object Carl : LLM() {
             - NO REVIVE
             - REVIVE
             - DIE FOR TRYING
+			- SOUL TRADE
         """.trimIndent()
 		)
 	}
@@ -66,7 +67,7 @@ Input messages will be in the format:
 Target: <Target name>
 Reasoning: <Reasoning>"
 
-Your messages consist of 2-3 relatively short paragraphs of reasoning and MUST end in a final line: "# VERDICT: <Verdict>"
+Your messages consist of 2 relatively short paragraphs of reasoning and MUST end in a final line: "# VERDICT: <Verdict>"
 Verdict MUST be one of the following:
 %s
 """

@@ -1,6 +1,8 @@
 package ai.helpers
 
-class MessageQueueMessage(val msg: String, val type: MessageQueue.Type)
+import dev.kord.core.entity.Message
+
+class MessageQueueMessage(val msg: Message, val type: MessageQueue.Type)
 
 class MessageQueue {
 	enum class Type {
@@ -9,12 +11,12 @@ class MessageQueue {
 	}
 
 	companion object {
-		const val MAX_MESSAGES = 6
+		const val MAX_MESSAGES = 10
 	}
 
 	val messages: ArrayDeque<MessageQueueMessage> = ArrayDeque()
 
-	fun addMessage(msg: String, type: Type) {
+	fun addMessage(msg: Message, type: Type) {
 		messages.addLast(MessageQueueMessage(msg, type))
 		if (messages.size > MAX_MESSAGES) messages.removeFirst()
 	}

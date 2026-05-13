@@ -12,7 +12,7 @@ abstract class TextCharacter(
 	name,
 	pfp,
 	Responder(
-		check = { content.lowercase().contains(Regex("\\b${name.lowercase()}\\b")) },
+		check = { content.lowercase().contains(Regex("(?<!\\\\)\\b${name.lowercase()}\\b")) },
 		execute =  {
 			sendAs(
 				kord,

@@ -1,7 +1,9 @@
 package commands.slashCommands.registry
 
 import ai.systemCharacters.Carl
+import ai.systemCharacters.Hank
 import commands.helpers.Execution.execute
+import commands.helpers.Execution.isExecuted
 import commands.helpers.Execution.revive
 import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
@@ -25,6 +27,15 @@ object AIReviveCommand : SlashCommand(
 		val beggarName = user.effectiveName
 		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(guildID).effectiveName
 		val reasoning = command.strings["reasoning"]!!
+
+		if (!command.users["user"]!!.isExecuted()) Hank.error<IllegalArgumentException>(
+			response,
+			defaultMsg = "Nobody is executed",
+			explanation = """
+				We are currently in the command "airevive", which is a command that allows the unwashed masses to revive each other using the judgement of an AI god called Carl Jebediah.
+				However, "${user.effectiveName}" tried to use this command on someone who is not executed.
+			""".trimIndent()
+		)
 
 		response.respond { content = "Summoning Carl" }
 

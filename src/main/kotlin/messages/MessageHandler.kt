@@ -1,21 +1,23 @@
 package messages
 
-import dev.kord.common.entity.GuildBadgeType
+import characters.Character
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
-import dev.kord.core.behavior.channel.asChannelOf
 import dev.kord.core.behavior.channel.asChannelOfOrNull
 import dev.kord.core.entity.channel.CategorizableChannel
 import dev.kord.core.entity.channel.GuildMessageChannel
+import dev.kord.core.entity.channel.thread.ThreadChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.core.on
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.classgraph.ClassGraph
-import io.ktor.util.reflect.instanceOf
 import messages.responders.Responder
 
-class MessageHandler {
-	fun init(kord: Kord) {
+object MessageHandler {
+	val responders by lazy { scanResponders() }
+	val characters by lazy { scanCharacters() }
+
+    fun init(kord: Kord) {
 		kord.on<MessageCreateEvent> {
 			val author = message.author ?: return@on
 
@@ -24,38 +26,70 @@ class MessageHandler {
 				Snowflake(Dotenv.load().get("TECH_CATEGORY_ID"))
 			)
 
-			if (author.isBot || !allowedCategories.contains(message.channel.asChannelOfOrNull<CategorizableChannel>()?.categoryId)) return@on
+			if (author.isBot
+				|| (
+					!allowedCategories.contains(message
+						.channel
+						.asChannelOfOrNull<CategorizableChannel>()
+						?.categoryId)
 
-			val responders = ClassGraph()
-				.enableClassInfo()
-				.acceptPackages("messages.responders.registry")
-				.scan()
-				.use { scanResult ->
-					scanResult
-						.getSubclasses(Responder::class.qualifiedName)
-						.loadClasses(Responder::class.java)
-						.mapNotNull { clazz -> clazz.kotlin.objectInstance }
-						.toSet()
-				}
-
-			val characters = ClassGraph()
-				.enableClassInfo()
-				.acceptPackages("characters.registry")
-				.scan()
-				.use { scanResult ->
-					scanResult
-						.allClasses
-						.loadClasses(characters.Character::class.java)
-						.mapNotNull { clazz -> clazz.kotlin.objectInstance }
-						.toSet()
-				}
+					&& !allowedCategories.contains(message
+						.channel
+						.asChannelOfOrNull<ThreadChannel>()
+						?.parent
+						?.asChannelOfOrNull<CategorizableChannel>()
+						?.categoryId)
+					)
+			) return@on
 
 			try {
-				responders.forEach { responder -> responder.respond(message) }
-				characters.forEach { character -> character.responder.respond(message) }
+				responders.forEach { responder -> responder.respondWithQueue(message) }
+
+				characters.sortByAppearance(message.content).forEach { character -> character.responder.respondWithQueue(message) }
 			} catch (e: Exception) {
 				val channel = kord.getChannelOf<GuildMessageChannel>(Snowflake(Dotenv.load().get("BOT_CHANNEL_ID")))!!
 				channel.createMessage("<@384422339393355786> ERROR: ${e.message} <:verger:1225937868023795792>")
+			}
+		}
+	}
+
+	private fun scanResponders(): Set<Responder> = ClassGraph()
+		.enableClassInfo()
+		.acceptPackages("messages.responders.registry")
+		.scan()
+		.use { scanResult ->
+			scanResult
+				.getSubclasses(Responder::class.qualifiedName)
+				.loadClasses(Responder::class.java)
+				.mapNotNull { clazz -> clazz.kotlin.objectInstance }
+				.toSet()
+		}
+
+	private fun scanCharacters(): List<Character> = ClassGraph()
+		.enableClassInfo()
+		.acceptPackages("characters.registry")
+		.scan()
+		.use { scanResult ->
+            scanResult
+                .allClasses
+                .loadClasses(Character::class.java)
+                .mapNotNull { clazz -> clazz.kotlin.objectInstance }
+                .toList()
+		}
+
+	private fun List<Character>.sortByAppearance(orderString: String): List<Character> {
+		val mentioned = orderString.split("\\w+".toRegex())
+			.filter { name -> this.any { it.name == name } }
+			.distinct()
+
+		val indexMap = mentioned.withIndex().associate { (index, name) -> name to index }
+
+		return this.sortedWith { a, b ->
+			val aIndex = indexMap[a.name]
+			val bIndex = indexMap[b.name]
+			when {
+				aIndex != null && bIndex != null -> aIndex.compareTo(bIndex)
+				else -> 0
 			}
 		}
 	}
