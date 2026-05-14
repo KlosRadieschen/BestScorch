@@ -28,6 +28,11 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:latest.release")
     implementation("io.github.cdimascio:dotenv-kotlin:latest.release")
     implementation("dev.kord:kord-core:latest.release")
+
+    implementation("org.jetbrains.exposed:exposed-core:0.49.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.49.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.49.0")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.3.2")
 }
 
 kotlin {

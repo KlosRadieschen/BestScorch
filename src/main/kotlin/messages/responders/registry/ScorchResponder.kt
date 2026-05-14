@@ -3,12 +3,13 @@ package messages.responders.registry
 import ai.CharacterLLM
 import ai.helpers.MessageQueue
 import ai.systemCharacters.Scorch
+import commands.helpers.Execution.isExecuted
 import dev.kord.core.behavior.channel.withTyping
 import dev.kord.core.behavior.reply
 import messages.responders.Responder
 
 object ScorchResponder : Responder(
-	check = { content.contains("Scorch") || referencedMessage?.author?.id == kord.selfId },
+	check = { (content.lowercase().contains(Regex("(?<!\\\\)\\bscorch\\b")) || referencedMessage?.author?.id == kord.selfId) && !(author?.isExecuted()?:false) },
 	execute = {
 		val message = this
 		channel.withTyping {

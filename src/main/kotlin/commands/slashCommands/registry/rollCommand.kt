@@ -52,14 +52,14 @@ object RollCommand : SlashCommand(
 		val rollMax = if (!advantage) max * diceAmount else max
 
 		val content = buildString {
-			if (reason != null) appendLine("Rolling for $reason")
+			if (reason != null) appendLine("Rolling for: *$reason*")
 
-			append(sumOrMax + modifier)
-			if (modifier > 0) append(" ($sumOrMax + $modifier)")
-			appendLine(" / $rollMax")
+			appendLine("# ${sumOrMax + modifier} / $rollMax")
 
 			if (diceAmount > 1) append("-# Individual d$max: $joinedRolls")
-			append( if (advantage) " (Advantage)" else " (Sum)" )
+			appendLine( if (advantage) " (Advantage)" else " (Sum)" )
+
+			if (modifier > 0) appendLine("-# Modifier: $modifier")
 		}
 
 		response.respond { this.content = content }

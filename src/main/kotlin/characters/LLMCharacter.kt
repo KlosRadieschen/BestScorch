@@ -2,6 +2,7 @@ package characters
 
 import ai.CharacterLLM
 import ai.helpers.MessageQueue
+import commands.helpers.Execution.isExecuted
 import messages.responders.Responder
 import messages.webhooks.WebhookSender.sendAs
 
@@ -14,7 +15,7 @@ abstract class LLMCharacter (
 	name,
 	pfp,
 	responder = Responder(
-		check = { content.lowercase().contains(Regex("(?<!\\\\)\\b${name.lowercase()}\\b")) || referencedMessage?.data?.author?.username == name },
+		check = { (content.lowercase().contains(Regex("(?<!\\\\)\\b${name.lowercase()}\\b")) || referencedMessage?.data?.author?.username == name) && !(author?.isExecuted()?:false) },
 		execute = {
 			sendAs(
 				kord,

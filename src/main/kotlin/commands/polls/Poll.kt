@@ -36,15 +36,13 @@ class Poll (
 				val emojis = listOf("🔥","🍷","💀","👻","🎶","💦","🫠","☕","🕊","💜").take(responses.votes.size)
 
 				var msg: Message? = channel.createEmbed {
-					color = Color(0x00ff00)
+					color = Color(0x009900)
 					title = question
 
-					field(buildString {
-						for ((i, emoji) in emojis.withIndex())
-							appendLine("$emoji: ${responses.values[i]}")
-					})
+					for ((i, emoji) in emojis.withIndex())
+						field("$emoji: ${responses.values[i]}", inline = false)
 
-					field("Expires " + Instant.fromEpochMilliseconds(System.currentTimeMillis()+duration.inWholeMilliseconds).toMessageFormat(DiscordTimestampStyle.RelativeTime))
+					field("Expires " + Instant.fromEpochMilliseconds(System.currentTimeMillis()+duration.inWholeMilliseconds).toMessageFormat(DiscordTimestampStyle.RelativeTime), false)
 
 					author {
 						name = user.asMember(SlashCommand.guildID).effectiveName
@@ -76,22 +74,20 @@ class Poll (
 
 					msg.edit {
 						embed {
-							color = Color(0xff0000)
+							color = Color(0x990000)
 							title = question
 
-							field(buildString {
-								for ((i, emoji) in emojis.withIndex()) {
-									val percentage = if (totalVotes > 0) {
-										responses.votes[i] * 100.0 / totalVotes
-									} else {
-										0.0
-									}
-
-									appendLine("$emoji: ${responses.values[i]} (${responses.votes[i]} vote(s), ${percentage.toInt()}%)")
+							for ((i, emoji) in emojis.withIndex()) {
+								val percentage = if (totalVotes > 0) {
+									responses.votes[i] * 100.0 / totalVotes
+								} else {
+									0.0
 								}
-							})
 
-							field("Expired " + Instant.fromEpochMilliseconds(System.currentTimeMillis()).toMessageFormat(DiscordTimestampStyle.RelativeTime))
+								field("$emoji: ${responses.values[i]} (${responses.votes[i]} vote(s), ${percentage.toInt()}%)", false)
+							}
+
+							field("Expired " + Instant.fromEpochMilliseconds(System.currentTimeMillis()).toMessageFormat(DiscordTimestampStyle.RelativeTime), false)
 
 							author {
 								name = user.asMember(SlashCommand.guildID).effectiveName

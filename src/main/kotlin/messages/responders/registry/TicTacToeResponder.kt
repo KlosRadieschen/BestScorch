@@ -2,6 +2,7 @@ package messages.responders.registry
 
 import commands.aiGames.tictactoe.GameResult
 import commands.aiGames.tictactoe.TicTacToeSession
+import commands.helpers.Execution.isExecuted
 import dev.kord.core.Kord
 import dev.kord.core.behavior.reply
 import dev.kord.core.entity.Message
@@ -10,7 +11,7 @@ import messages.responders.Responder
 import messages.responders.registry.TicTacToeResponder.checkWin
 
 object TicTacToeResponder : Responder(
-	check = { channelId.value.toString() == Dotenv.load().get("BOT_CHANNEL_ID") && TicTacToeSession.Companion.games.containsKey(author!!.id.value.toString()) },
+	check = { channelId.value.toString() == Dotenv.load().get("BOT_CHANNEL_ID") && TicTacToeSession.Companion.games.containsKey(author!!.id.value.toString()) && !(author?.isExecuted()?:false) },
 	execute = execute@{
 		val playerMove = try {
 			content.toInt().coerceIn(1, 9) - 1

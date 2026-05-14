@@ -44,8 +44,7 @@ object MessageHandler {
 
 			try {
 				responders.forEach { responder -> responder.respondWithQueue(message) }
-
-				characters.sortByAppearance(message.content).forEach { character -> character.responder.respondWithQueue(message) }
+				characters.forEach { character -> character.responder.respondWithQueue(message) }
 			} catch (e: Exception) {
 				val channel = kord.getChannelOf<GuildMessageChannel>(Snowflake(Dotenv.load().get("BOT_CHANNEL_ID")))!!
 				channel.createMessage("<@384422339393355786> ERROR: ${e.message} <:verger:1225937868023795792>")
@@ -76,21 +75,4 @@ object MessageHandler {
                 .mapNotNull { clazz -> clazz.kotlin.objectInstance }
                 .toList()
 		}
-
-	private fun List<Character>.sortByAppearance(orderString: String): List<Character> {
-		val mentioned = orderString.split("\\w+".toRegex())
-			.filter { name -> this.any { it.name == name } }
-			.distinct()
-
-		val indexMap = mentioned.withIndex().associate { (index, name) -> name to index }
-
-		return this.sortedWith { a, b ->
-			val aIndex = indexMap[a.name]
-			val bIndex = indexMap[b.name]
-			when {
-				aIndex != null && bIndex != null -> aIndex.compareTo(bIndex)
-				else -> 0
-			}
-		}
-	}
 }

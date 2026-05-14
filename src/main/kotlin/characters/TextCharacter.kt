@@ -1,6 +1,6 @@
 package characters
 
-import dev.kord.core.behavior.reply
+import commands.helpers.Execution.isExecuted
 import messages.responders.Responder
 import messages.webhooks.WebhookSender.sendAs
 
@@ -12,7 +12,7 @@ abstract class TextCharacter(
 	name,
 	pfp,
 	Responder(
-		check = { content.lowercase().contains(Regex("(?<!\\\\)\\b${name.lowercase()}\\b")) },
+		check = { content.lowercase().contains(Regex("(?<!\\\\)\\b${name.lowercase()}\\b")) && !(author?.isExecuted()?:false) },
 		execute =  {
 			sendAs(
 				kord,

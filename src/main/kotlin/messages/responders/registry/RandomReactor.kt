@@ -1,12 +1,13 @@
 package messages.responders.registry
 
+import commands.helpers.Execution.isExecuted
 import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
 import messages.responders.Responder
 import kotlin.random.Random
 
 object RandomReactor : Responder(
-	check = { Random.nextInt(100) == 0 },
+	check = { Random.nextInt(100) == 0 && !(author?.isExecuted()?:false) },
 	execute = {
 		val ids = listOf(
 			1225937868023795792,
