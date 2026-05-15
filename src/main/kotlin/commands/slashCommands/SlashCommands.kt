@@ -39,6 +39,7 @@ object SlashCommands {
 
 			mutex.lock()
 			val response = interaction.deferPublicResponse()
+
 			try {
 				commands[interaction.data.data.name.value]!!.run(interaction, response)
 			} catch (e: Exception) {

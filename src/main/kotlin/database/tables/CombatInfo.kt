@@ -1,12 +1,13 @@
 package database.tables
 
 import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.and
 
 object CombatInfo : Table() {
     // Keys
-    val ownerID = integer("pkfk_ownerID").references(Character.id)
+    val ownerID = integer("pkfk_ownerID").references(Character.id, ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(ownerID)
 
     // Info

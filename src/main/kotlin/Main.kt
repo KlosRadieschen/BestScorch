@@ -8,13 +8,14 @@ import dev.kord.gateway.PrivilegedIntent
 import io.github.cdimascio.dotenv.Dotenv
 import messages.MessageHandler
 
+const val RECREATE = false
+
 suspend fun main() {
 	val kord = Kord(Dotenv.load().get("BOT_TOKEN"))
 
 	TicTacToeSession.loadAI()
 
-	//SlashCommands.deleteOld(kord)
-	//SlashCommands.createAll(kord)
+	recreateCommands(kord)
 	SlashCommands.registerAll(kord)
 
 	MessageHandler.init(kord)
@@ -26,5 +27,12 @@ suspend fun main() {
 
 		val channel = kord.getChannelOf<GuildMessageChannel>(Snowflake(Dotenv.load().get("BOT_CHANNEL_ID")!!))
         channel?.createMessage("https://tenor.com/view/wwe-coffin-world-wrestling-entertainment-gif-17903370")
+	}
+}
+
+private suspend fun recreateCommands(kord: Kord) {
+	if (RECREATE) {
+		SlashCommands.deleteOld(kord)
+		SlashCommands.createAll(kord)
 	}
 }
