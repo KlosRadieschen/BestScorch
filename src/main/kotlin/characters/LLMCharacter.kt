@@ -3,6 +3,7 @@ package characters
 import ai.CharacterLLM
 import ai.helpers.MessageQueue
 import commands.helpers.Execution.isExecuted
+import dev.kord.core.behavior.reply
 import messages.responders.Responder
 import messages.webhooks.WebhookSender.sendAs
 
@@ -27,19 +28,26 @@ abstract class LLMCharacter (
 			)
 		},
 		executeWithQueue = {
-			val llmResponse = llm.respond(this) ?: "AI is currently not enabled"
+			try {
+				val llmResponse = llm.respond(this) ?: "AI is currently not enabled"
+				val chunks = llmResponse.chunked(2000)
 
-			val message = sendAs(
-				kord,
-				name = name,
-				profilePictureLink = pfp,
-				message = llmResponse,
-				channelID = channelId,
-				CharacterLLM.messageQueue.messages.last().msg
-			)
+				val message = sendAs(
+					kord,
+					name = name,
+					profilePictureLink = pfp,
+					message = chunks[0],
+					channelID = channelId,
+					CharacterLLM.messageQueue.messages.last().msg
+				)
 
-			CharacterLLM.messageQueue.addMessage(message, MessageQueue.Type.UserMessage)
-			CharacterLLM.mutex.unlock()
+				CharacterLLM.messageQueue.addMessage(message, MessageQueue.Type.UserMessage)
+
+				if (chunks.size > 1)
+					chunks.drop(1).forEach { c -> message.reply { content = c } }
+			} finally {
+				CharacterLLM.mutex.unlock()
+			}
 		}
 	)
 )

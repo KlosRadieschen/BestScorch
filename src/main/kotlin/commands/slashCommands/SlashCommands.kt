@@ -1,17 +1,18 @@
 package commands.slashCommands
 
+import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Execution.isExecuted
+import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
 import io.github.classgraph.ClassGraph
-import kotlinx.coroutines.sync.Mutex
 import messages.webhooks.WebhookSender.sendAs
 
 object SlashCommands {
-	private val mutex = Mutex()
+	private val activeUsersIDs = mutableSetOf<Snowflake>()
 
 	private val commands: Map<String, SlashCommand> =
 		ClassGraph()
@@ -30,14 +31,19 @@ object SlashCommands {
 
 	fun registerAll(kord: Kord) {
 		kord.on<GuildChatInputCommandInteractionCreateEvent> {
-			if (interaction.user.isExecuted()) {
+			if (interaction.user.isExecuted() && !interaction.user.isAdminAbuser()) {
 				interaction.respondEphemeral {
 					content = "https://tenor.com/view/thunder-cross-split-attack-tcsa-you-fell-for-it-fool-gif-24290983"
 				}
 				return@on
+			} else if (activeUsersIDs.contains(interaction.user.id)) {
+				interaction.respondEphemeral {
+					content = "You can only have one running command at a time"
+				}
+				return@on
 			}
 
-			mutex.lock()
+			activeUsersIDs.add(interaction.user.id)
 			val response = interaction.deferPublicResponse()
 
 			try {
@@ -55,7 +61,7 @@ object SlashCommands {
 					msg.message
 				)
 			} finally {
-			    mutex.unlock()
+				activeUsersIDs.remove(interaction.user.id)
 			}
 		}
 	}

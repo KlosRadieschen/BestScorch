@@ -17,7 +17,7 @@ abstract class LLM {
 		.apiKey(token)
 		.build()
 
-	suspend fun generateMessage(prompt: String, userMessage: String): String? {
+	fun generateMessage(prompt: String, userMessage: String): String? {
 		val params = ChatCompletionCreateParams.builder()
 			.model(MODEL_ID)
 			.addSystemMessage(prompt)

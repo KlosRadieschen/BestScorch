@@ -6,5 +6,5 @@ import messages.responders.Responder
 
 object ExposerHandler : Responder(
 	check = { true },
-	execute = { author?.addExposeMessage(ExposeMessage(content, timestamp)) }
+	execute = { author?.addExposeMessage(ExposeMessage(content.take(1000), timestamp)) }
 )

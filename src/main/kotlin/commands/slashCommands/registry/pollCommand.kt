@@ -1,5 +1,6 @@
 package commands.slashCommands.registry
 
+import ai.systemCharacters.Hank
 import commands.polls.Poll
 import commands.polls.PollResponses
 import commands.slashCommands.SlashCommand
@@ -17,18 +18,21 @@ object PollCommand : SlashCommand(
 	args = {
 		string("question", "Pretty self-explanatory") {
 			required = true
+			maxLength = 250
 		}
 		string("option1", "Option 1") {
 			required = true
+			maxLength = 200
 		}
 		string("option2", "Option 2") {
 			required = true
+			maxLength = 200
 		}
-		string("option3", "Option 3")
-		string("option4", "Option 4")
-		string("option5", "Option 5")
-		string("option6", "Option 6")
-		string("option7", "Option 7")
+		string("option3", "Option 3") { maxLength = 200 }
+		string("option4", "Option 4") { maxLength = 200 }
+		string("option5", "Option 5") { maxLength = 200 }
+		string("option6", "Option 6") { maxLength = 200 }
+		string("option7", "Option 7") { maxLength = 200 }
 		string("duration", "Default: 1 day")
 	},
 	run = { response ->
@@ -42,7 +46,9 @@ object PollCommand : SlashCommand(
 				values = options,
 				votes = IntArray(options.size)
 			),
-			Duration.parse(command.strings["duration"] ?: "1d").coerceAtMost(7.days)
+            runCatching {
+                Duration.parse(command.strings["duration"] ?: "1d").coerceAtMost(7.days)
+            }.getOrElse { Hank.error<IllegalArgumentException>("Invalid time format", "We are currently in the command \"poll\" and the user entered an invalid time format for the duration. Explain ISO-8601 without mentioning its name.") } as Duration
 		)
 
 		coroutineScope {

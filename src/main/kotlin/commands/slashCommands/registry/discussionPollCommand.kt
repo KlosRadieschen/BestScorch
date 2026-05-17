@@ -16,6 +16,7 @@ object DiscussionPollCommand : SlashCommand(
 	args = {
 		string("question", "Pretty self-explanatory") {
 			required = true
+			maxLength = 256
 		}
 	},
 	run = { response ->
