@@ -6,7 +6,7 @@ object Titan : Table() {
     // Keys
     val callsign = varchar("pk_callsign", 7).check { it regexp "^[A-Z]{2}-\\d{4}$" }
     override val primaryKey = PrimaryKey(callsign)
-    val ownerID = integer("fk_characterID").references(Character.id)
+    val ownerID = integer("fk_characterID").references(CharacterTable.id)
 
     // General
     val name = varchar("name", 50)

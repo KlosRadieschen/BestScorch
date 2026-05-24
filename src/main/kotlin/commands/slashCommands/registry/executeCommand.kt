@@ -4,7 +4,7 @@ import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Execution.execute
 import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
-import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.rest.builder.interaction.user
 
 object ExecuteCommand : SlashCommand(
@@ -15,12 +15,14 @@ object ExecuteCommand : SlashCommand(
 			required = true
 		}
 	},
-	run = { response ->
+	run = {
 		val target = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!
 		val executee = if (user.isAdminAbuser()) target else user
 
 		executee.execute()
 
-		response.respond { content = "${executee.mention} was MURDERED" }
+		respondPublic { content = "${executee.mention} was MURDERED" }
+
+		null
 	}
 )

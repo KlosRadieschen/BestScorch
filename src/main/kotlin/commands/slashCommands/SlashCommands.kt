@@ -1,11 +1,11 @@
 package commands.slashCommands
 
+import Config
 import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Execution.isExecuted
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.respondEphemeral
-import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
 import io.github.classgraph.ClassGraph
@@ -44,21 +44,18 @@ object SlashCommands {
 			}
 
 			activeUsersIDs.add(interaction.user.id)
-			val response = interaction.deferPublicResponse()
 
 			try {
-				commands[interaction.data.data.name.value]!!.run(interaction, response)
+				commands[interaction.data.data.name.value]!!.run(interaction)
 			} catch (e: Exception) {
 				e.printStackTrace()
 
-				val msg = response.respond { content = "Error occurred, summoning Hank" }
 				sendAs(
 					kord,
 					"Hank Jabbers",
 					"https://images.meme-arsenal.com/23c24d089786aef571de84ce6672b27d.jpg",
 					e.message ?: "UNKNOWN ERROR, EVERYBODY PANIC!",
-					interaction.channelId,
-					msg.message
+					interaction.channelId
 				)
 			} finally {
 				activeUsersIDs.remove(interaction.user.id)
@@ -67,7 +64,7 @@ object SlashCommands {
 	}
 
 	suspend fun deleteOld(kord: Kord) {
-		val commands = kord.getGuildApplicationCommands(SlashCommand.guildID)
+		val commands = kord.getGuildApplicationCommands(Config.Snowflakes.ahaGuildID)
 		commands.collect { command ->
 			command.delete()
 		}

@@ -1,5 +1,6 @@
 package commands.slashCommands.registry
 
+import Config
 import ai.systemCharacters.Hank
 import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Ranks.promote
@@ -20,8 +21,10 @@ object PromoteCommand : SlashCommand(
 		integer("steps", "The amount of ranks to go up/down (Default: 1)")
 		string("reason", "Reason for the promotion/demotion")
 	},
-	run = { response ->
-		val targetMember = kord.getUser(command.users["user"]!!.id)!!.withStrategy(EntitySupplyStrategy.rest).asMember(guildID)
+	run = {
+		val response = deferPublicResponse()
+
+		val targetMember = kord.getUser(command.users["user"]!!.id)!!.withStrategy(EntitySupplyStrategy.rest).asMember(Config.Snowflakes.ahaGuildID)
 		if (!user.isAdminAbuser()) Hank.error<IllegalArgumentException>(
 			response,
 			defaultMsg = "You are not an admin abuser",
@@ -43,5 +46,7 @@ object PromoteCommand : SlashCommand(
 		}
 
 		response.respond { this.content = content }
+
+		response
 	}
 )

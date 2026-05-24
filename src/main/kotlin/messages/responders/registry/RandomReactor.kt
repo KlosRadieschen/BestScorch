@@ -1,7 +1,7 @@
 package messages.responders.registry
 
+import Config
 import commands.helpers.Execution.isExecuted
-import commands.slashCommands.SlashCommand
 import dev.kord.common.entity.Snowflake
 import messages.responders.Responder
 import kotlin.random.Random
@@ -31,7 +31,7 @@ object RandomReactor : Responder(
 			1301868886362165359
 		)
 
-		val emoji = kord.getGuild(SlashCommand.Companion.guildID).getEmoji(Snowflake(ids.random()))
+		val emoji = kord.getGuild(Config.Snowflakes.ahaGuildID).getEmoji(Snowflake(ids.random()))
 		addReaction(emoji)
 	}
 )

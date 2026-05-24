@@ -1,8 +1,8 @@
 package ai
 
+import Config
 import ai.helpers.MessageQueue
 import com.openai.models.chat.completions.ChatCompletionCreateParams
-import commands.slashCommands.SlashCommand
 import dev.kord.core.entity.Message
 import kotlinx.coroutines.sync.Mutex
 
@@ -36,7 +36,7 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 
 		if (!messageHistory.messages.any { m -> m.msg == userMessage }) messageHistory.addMessage(userMessage, MessageQueue.Type.UserMessage)
 
-		val authorName = userMessage.author?.asMember(SlashCommand.guildID)?.effectiveName
+		val authorName = userMessage.author?.asMember(Config.Snowflakes.ahaGuildID)?.effectiveName
 			?: userMessage.data.author.username
 
 		messageHistory.messages.forEach {

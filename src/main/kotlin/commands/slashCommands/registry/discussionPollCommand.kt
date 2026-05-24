@@ -1,9 +1,9 @@
 package commands.slashCommands.registry
 
-import commands.polls.Poll
-import commands.polls.PollResponses
+import commands.helpers.polls.Poll
+import commands.helpers.polls.PollResponses
 import commands.slashCommands.SlashCommand
-import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.rest.builder.interaction.string
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ object DiscussionPollCommand : SlashCommand(
 			maxLength = 256
 		}
 	},
-	run = { response ->
+	run = {
 		val poll = Poll(
 			command.strings["question"]!!,
 			responses = PollResponses.Discussion,
@@ -28,7 +28,9 @@ object DiscussionPollCommand : SlashCommand(
 
 		coroutineScope {
 			launch { poll.start(kord, user) }
-			response.respond { content = "Poll created" }
+			respondPublic { content = "Poll created" }
 		}
+
+		null
 	}
 )

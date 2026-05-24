@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.and
 
 object CombatInfo : Table() {
     // Keys
-    val ownerID = integer("pkfk_ownerID").references(Character.id, ReferenceOption.CASCADE)
+    val ownerID = integer("pkfk_characterID").references(CharacterTable.id, ReferenceOption.CASCADE)
     override val primaryKey = PrimaryKey(ownerID)
 
     // Info

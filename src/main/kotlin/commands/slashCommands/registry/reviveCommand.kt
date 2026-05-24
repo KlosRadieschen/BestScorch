@@ -20,7 +20,9 @@ object ReviveCommand : SlashCommand(
 			required = true
 		}
 	},
-	run = { response ->
+	run = {
+		val response = deferPublicResponse()
+
 		if (!user.isAdminAbuser()) Hank.error<IllegalArgumentException>(
 			response,
 			defaultMsg = "You are not an admin abuser",
@@ -47,5 +49,7 @@ object ReviveCommand : SlashCommand(
 				File("src/main/resources/reviveLowQual.gif").readChannel()
 			})
 		}
+
+		response
 	}
 )

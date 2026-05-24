@@ -14,7 +14,9 @@ object ReviveAllCommand : SlashCommand(
 	name = "reviveall",
 	description = "UNMURDER everyone",
 	args = {},
-	run = { response ->
+	run = {
+		val response = deferPublicResponse()
+
 		if (!user.isAdminAbuser()) Hank.error<IllegalArgumentException>(
 			response,
 			defaultMsg = "You are not an admin abuser",
@@ -42,5 +44,7 @@ object ReviveAllCommand : SlashCommand(
 		}
 
 		Execution.reviveAll(kord)
+
+		response
 	}
 )

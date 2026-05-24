@@ -1,22 +1,27 @@
+
 import commands.aiGames.tictactoe.TicTacToeSession
+import commands.autoComplete.AutoCompletes
+import commands.buttonCommands.ButtonCommands
+import commands.modalCommands.ModalCommands
 import commands.slashCommands.SlashCommands
-import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.entity.channel.GuildMessageChannel
 import dev.kord.gateway.Intent
 import dev.kord.gateway.PrivilegedIntent
-import io.github.cdimascio.dotenv.Dotenv
 import messages.MessageHandler
 
 const val RECREATE = false
 
 suspend fun main() {
-	val kord = Kord(Dotenv.load().get("BOT_TOKEN"))
+	val kord = Kord(Config.Tokens.botToken)
 
 	TicTacToeSession.loadAI()
 
 	recreateCommands(kord)
 	SlashCommands.registerAll(kord)
+	ButtonCommands.registerAll(kord)
+	ModalCommands.registerAll(kord)
+	AutoCompletes.registerAll(kord)
 
 	MessageHandler.init(kord)
 
@@ -25,7 +30,7 @@ suspend fun main() {
 		@OptIn(PrivilegedIntent::class)
 		intents += Intent.MessageContent
 
-		val channel = kord.getChannelOf<GuildMessageChannel>(Snowflake(Dotenv.load().get("BOT_CHANNEL_ID")!!))
+		val channel = kord.getChannelOf<GuildMessageChannel>(Config.Snowflakes.Channels.botChannelID)
         channel?.createMessage("https://tenor.com/view/wwe-coffin-world-wrestling-entertainment-gif-17903370")
 	}
 }

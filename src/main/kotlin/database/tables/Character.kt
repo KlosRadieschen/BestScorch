@@ -1,26 +1,26 @@
 package database.tables
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 
-object Character : Table() {
-    // Key
-    val id = integer("pk_ID").autoIncrement()
-    override val primaryKey = PrimaryKey(id)
-
+object CharacterTable : IntIdTable() {
     // Meta
-    val ownerID = integer("ownerID")
+    val ownerID = ulong("ownerID")
+    val sanitizedName = varchar("sanitizedName", 50)
 
     // Person
     val name =  varchar("name", 50)
-    val age = integer("age").nullable()
+    val age = varchar("age", 25).nullable()
     val gender = varchar("gender", 50).nullable()
-    val height = integer("height").nullable()
+    val height = varchar("height", 50).nullable()
     val appearance = text("appearance").nullable()
     val image = blob("image").nullable()
 
     // Military
-    val rank = integer("rank").nullable()
-    val battalion = integer("battalion").nullable()
+    val rank = varchar("rank", 50).nullable()
+    val battalion = varchar("battalion", 50).nullable()
 
     // Lore
     val lore = text("lore").nullable()
@@ -30,4 +30,33 @@ object Character : Table() {
 
     // Misc
     val misc = text("misc").nullable()
+}
+
+class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<CharacterEntity>(CharacterTable)
+
+    // Meta
+    var ownerID by CharacterTable.ownerID
+    var sanitizedName by CharacterTable.sanitizedName
+
+    // Person
+    var name by CharacterTable.name
+    var age by CharacterTable.age
+    var gender by CharacterTable.gender
+    var height by CharacterTable.height
+    var appearance by CharacterTable.appearance
+    var image by CharacterTable.image
+
+    // Military
+    var rank by CharacterTable.rank
+    var battalion by CharacterTable.battalion
+
+    // Lore
+    var lore by CharacterTable.lore
+    var traits by CharacterTable.traits
+    var likes by CharacterTable.likes
+    var dislikes by CharacterTable.dislikes
+
+    // Misc
+    var misc by CharacterTable.misc
 }

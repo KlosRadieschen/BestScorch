@@ -22,8 +22,8 @@ object MessageHandler {
 			val author = message.author ?: return@on
 
 			val allowedCategories = setOf<Snowflake>(
-				Snowflake(Dotenv.load().get("OOC_CATEGORY_ID")),
-				Snowflake(Dotenv.load().get("TECH_CATEGORY_ID"))
+				Config.Snowflakes.Channels.oocCategoryID,
+				Config.Snowflakes.Channels.techCategoryID
 			)
 
 			if (author.isBot
@@ -46,7 +46,7 @@ object MessageHandler {
 				responders.forEach { responder -> responder.respondWithQueue(message) }
 				characters.forEach { character -> character.responder.respondWithQueue(message) }
 			} catch (e: Exception) {
-				val channel = kord.getChannelOf<GuildMessageChannel>(Snowflake(Dotenv.load().get("BOT_CHANNEL_ID")))!!
+				val channel = kord.getChannelOf<GuildMessageChannel>(Config.Snowflakes.Channels.botChannelID)!!
 				channel.createMessage("<@384422339393355786> ERROR: ${e.message} <:verger:1225937868023795792>")
 			}
 		}

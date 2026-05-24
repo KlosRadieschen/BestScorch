@@ -1,4 +1,4 @@
-package commands.polls
+package commands.helpers.polls
 
 sealed interface PollResponses {
 	data class Options(

@@ -3,7 +3,7 @@ package commands.slashCommands.registry
 import commands.slashCommands.SlashCommand
 import commands.slashCommands.registry.RollCommand.max
 import commands.slashCommands.registry.RollCommand.min
-import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.rest.builder.interaction.integer
 import dev.kord.rest.builder.interaction.string
 import kotlin.math.absoluteValue
@@ -30,7 +30,7 @@ object RollCommand : SlashCommand(
 			choice("Advantage", 1)
 		}
 	},
-	run = { response ->
+	run = {
 		val advantage = when (command.integers["advantage"] ?: 0) {
 			(-1).toLong() -> AdvantageState.Disadvantage
 			(0).toLong() -> AdvantageState.None
@@ -66,7 +66,9 @@ object RollCommand : SlashCommand(
 			if (advantage != AdvantageState.None) appendLine("${baseRolls.first}, ${baseRolls.second}")
 		}
 
-		response.respond { this.content = content }
+		respondPublic { this.content = content }
+
+		null
 	}
 ) {
 	enum class AdvantageState {

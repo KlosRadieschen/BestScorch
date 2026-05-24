@@ -1,5 +1,6 @@
 package commands.slashCommands.registry
 
+import Config
 import ai.systemCharacters.Carl
 import ai.systemCharacters.Hank
 import commands.helpers.AdminAbusers.isImmune
@@ -22,7 +23,9 @@ object AIExecuteCommand : SlashCommand(
 			required = true
 		}
 	},
-	run = { response ->
+	run = {
+		val response = deferPublicResponse()
+
 		if (command.users["user"]!!.isImmune()) Hank.error<IllegalArgumentException>(
 			response,
 			defaultMsg = "Target is an admin abuser",
@@ -33,7 +36,7 @@ object AIExecuteCommand : SlashCommand(
 		)
 
 		val assailantName = user.effectiveName
-		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(guildID).effectiveName
+		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
 		val reasoning = command.strings["reasoning"]!!
 
 		response.respond { content = "Summoning Carl" }
@@ -57,5 +60,6 @@ object AIExecuteCommand : SlashCommand(
 		}
 
 		WebhookSender.sendAs(kord, "Carl Jebediah", "https://preview.redd.it/my-favorite-clanker-moment-in-jedi-survivor-v0-wuneb16cbc1b1.jpeg?width=960&format=pjpg&auto=webp&s=82f3e54ad48edc2316b746de7f66da298424890c", aiResponse, channelId)
+		response
 	}
 )

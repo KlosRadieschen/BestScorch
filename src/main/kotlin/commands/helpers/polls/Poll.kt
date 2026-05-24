@@ -1,10 +1,9 @@
-package commands.polls
+package commands.helpers.polls
 
-import commands.slashCommands.SlashCommand
+import Config
 import dev.kord.common.Color
 import dev.kord.common.DiscordTimestampStyle
 import dev.kord.common.entity.ArchiveDuration
-import dev.kord.common.entity.Snowflake
 import dev.kord.common.toMessageFormat
 import dev.kord.core.Kord
 import dev.kord.core.behavior.channel.TextChannelBehavior
@@ -14,7 +13,6 @@ import dev.kord.core.entity.Message
 import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.User
 import dev.kord.rest.builder.message.embed
-import io.github.cdimascio.dotenv.Dotenv
 import java.lang.Thread.sleep
 import kotlin.time.Duration
 import kotlin.time.Instant
@@ -25,11 +23,11 @@ class Poll (
 	val duration: Duration
 ) {
 	companion object {
-		val pollChannelID = Dotenv.load().get("POLL_CHANNEL_ID")!!
+		val pollChannelID = Config.Snowflakes.Channels.pollChannelID
 	}
 
 	suspend fun start(kord: Kord, user: User) {
-		val channel = kord.getChannel(Snowflake(pollChannelID))!! as TextChannelBehavior
+		val channel = kord.getChannel(pollChannelID)!! as TextChannelBehavior
 
 		when (responses) {
 			is PollResponses.Options -> {
@@ -45,7 +43,7 @@ class Poll (
 					field("Expires " + Instant.fromEpochMilliseconds(System.currentTimeMillis()+duration.inWholeMilliseconds).toMessageFormat(DiscordTimestampStyle.RelativeTime), false)
 
 					author {
-						name = user.asMember(SlashCommand.guildID).effectiveName
+						name = user.asMember(Config.Snowflakes.ahaGuildID).effectiveName
 						icon = user.avatar?.cdnUrl?.toUrl()
 					}
 
@@ -90,7 +88,7 @@ class Poll (
 							field("Expired " + Instant.fromEpochMilliseconds(System.currentTimeMillis()).toMessageFormat(DiscordTimestampStyle.RelativeTime), false)
 
 							author {
-								name = user.asMember(SlashCommand.guildID).effectiveName
+								name = user.asMember(Config.Snowflakes.ahaGuildID).effectiveName
 								icon = user.avatar?.cdnUrl?.toUrl()
 							}
 
@@ -106,7 +104,7 @@ class Poll (
 					title = question
 
 					author {
-						name = user.asMember(SlashCommand.guildID).effectiveName
+						name = user.asMember(Config.Snowflakes.ahaGuildID).effectiveName
 						icon = user.avatar?.cdnUrl?.toUrl()
 					}
 

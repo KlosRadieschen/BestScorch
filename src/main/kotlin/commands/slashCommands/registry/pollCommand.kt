@@ -1,8 +1,8 @@
 package commands.slashCommands.registry
 
 import ai.systemCharacters.Hank
-import commands.polls.Poll
-import commands.polls.PollResponses
+import commands.helpers.polls.Poll
+import commands.helpers.polls.PollResponses
 import commands.slashCommands.SlashCommand
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.string
@@ -35,7 +35,9 @@ object PollCommand : SlashCommand(
 		string("option7", "Option 7") { maxLength = 200 }
 		string("duration", "Default: 1 day")
 	},
-	run = { response ->
+	run = {
+		val response = deferPublicResponse()
+
 		val options = (1..7).mapNotNull { index ->
 			command.strings["option$index"]?.takeIf { it.isNotBlank() }
 		}
@@ -48,12 +50,18 @@ object PollCommand : SlashCommand(
 			),
             runCatching {
                 Duration.parse(command.strings["duration"] ?: "1d").coerceAtMost(7.days)
-            }.getOrElse { Hank.error<IllegalArgumentException>("Invalid time format", "We are currently in the command \"poll\" and the user entered an invalid time format for the duration. Explain ISO-8601 without mentioning its name.") } as Duration
+            }.getOrElse { Hank.error<IllegalArgumentException>(
+	            response,
+	            "Invalid time format",
+	            "We are currently in the command \"poll\" and the user entered an invalid time format for the duration. Explain ISO-8601 without mentioning its name.") } as Duration
 		)
 
 		coroutineScope {
 			launch { poll.start(kord, user) }
-			response.respond { content = "Poll created" }
 		}
+
+		response.respond { content = "Poll created" }
+
+		response
 	}
 )

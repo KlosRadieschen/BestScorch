@@ -1,5 +1,6 @@
 package commands.slashCommands.registry
 
+import Config
 import ai.systemCharacters.Hank
 import commands.helpers.Exposer.exposeMessages
 import commands.slashCommands.SlashCommand
@@ -18,7 +19,9 @@ object ExposeCommand : SlashCommand(
 			required = true
 		}
 	},
-	run = commandRun@{ response ->
+	run = {
+		val response = deferPublicResponse()
+
 		try {
 			response.respond {
 				embed {
@@ -34,16 +37,21 @@ object ExposeCommand : SlashCommand(
 					}
 
 					author {
-						name = command.users["user"]!!.asMember(guildID).effectiveName
+						name = command.users["user"]!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
 						icon = command.users["user"]!!.avatar?.cdnUrl?.toUrl()
 					}
 				}
 			}
 		} catch (e: Exception) {
-			Hank.error<IllegalStateException>(e.message ?: e.toString(), """
+			Hank.error<IllegalStateException>(
+				response,
+				e.message ?: e.toString(),
+				"""
 				We are in the command "expose" which lets you expose the last 5 messages of a user, even if they are edited or deleted.
-				However, ${user.asMember(SlashCommand.guildID).effectiveName} tried using it on someone who hasn't posted any messages since the last restart of this bot.
+				However, ${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName} tried using it on someone who hasn't posted any messages since the last restart of this bot.
 			""".trimIndent())
 		}
+
+		response
 	}
 )
