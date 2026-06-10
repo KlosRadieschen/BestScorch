@@ -1,6 +1,7 @@
 package commands.slashCommands
 
 import Config
+import ai.systemCharacters.Hank
 import commands.helpers.AdminAbusers.isAdminAbuser
 import commands.helpers.Execution.isExecuted
 import dev.kord.common.entity.Snowflake
@@ -9,7 +10,6 @@ import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
 import io.github.classgraph.ClassGraph
-import messages.webhooks.WebhookSender.sendAs
 
 object SlashCommands {
 	private val activeUsersIDs = mutableSetOf<Snowflake>()
@@ -45,21 +45,11 @@ object SlashCommands {
 
 			activeUsersIDs.add(interaction.user.id)
 
-			try {
+			Hank.runHandling(kord, interaction.channelId) {
 				commands[interaction.data.data.name.value]!!.run(interaction)
-			} catch (e: Exception) {
-				e.printStackTrace()
-
-				sendAs(
-					kord,
-					"Hank Jabbers",
-					"https://images.meme-arsenal.com/23c24d089786aef571de84ce6672b27d.jpg",
-					e.message ?: "UNKNOWN ERROR, EVERYBODY PANIC!",
-					interaction.channelId
-				)
-			} finally {
-				activeUsersIDs.remove(interaction.user.id)
 			}
+
+			activeUsersIDs.remove(interaction.user.id)
 		}
 	}
 

@@ -1,30 +1,58 @@
 package ai.systemCharacters
 
 import ai.LLM
+import dev.kord.common.entity.Snowflake
+import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.DeferredPublicMessageInteractionResponseBehavior
 import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.core.entity.interaction.response.PublicMessageInteractionResponse
 import messages.webhooks.WebhookSender.sendAs
 
 object Hank : LLM() {
 	inline fun <reified T : Throwable> error(defaultMsg: String, explanation: String) {
-		var msg = defaultMsg
-		msg = explainError(msg, explanation) ?: msg
-		throw T::class.java.getDeclaredConstructor(String::class.java).newInstance(msg)
+		val explanation = explainError(defaultMsg, explanation) ?: defaultMsg
+		throw HankException(defaultMsg, explanation, null)
 	}
 
-	suspend inline fun <reified T : Throwable> error(response: DeferredPublicMessageInteractionResponseBehavior, defaultMsg: String, explanation: String) {
-		val botMsg = response.respond { content = "Error occurred, summoning Hank" }
+	suspend inline fun <reified T : Throwable> error(response: DeferredPublicMessageInteractionResponseBehavior?, defaultMsg: String, explanation: String) {
+		val botMsg = response?.respond { content = "Error occurred, summoning Hank" }
+		val explanation = explainError(defaultMsg, explanation) ?: defaultMsg
+		throw HankException(defaultMsg, explanation, botMsg)
+	}
 
-		val msg = explainError(defaultMsg, explanation) ?: defaultMsg
+	suspend fun runHandling (kord: Kord, channelID: Snowflake, block: suspend () -> Unit) {
+		try {
+			block()
+		} catch (he: HankException) {
+			if (he.respondMessage == null) {
+				sendAs(
+					kord,
+					"Hank Jabbers",
+					"https://images.meme-arsenal.com/23c24d089786aef571de84ce6672b27d.jpg",
+					he.message ?: "UNKNOWN ERROR, EVERYBODY PANIC!",
+					channelID,
+				)
+			} else {
+				sendAs(
+					kord,
+					"Hank Jabbers",
+					"https://images.meme-arsenal.com/23c24d089786aef571de84ce6672b27d.jpg",
+					he.message ?: "UNKNOWN ERROR, EVERYBODY PANIC!",
+					channelID,
+					he.respondMessage.message
+				)
+			}
+		} catch (e: Exception) {
+			e.printStackTrace()
 
-		sendAs(
-			botMsg.kord,
-			"Hank Jabbers",
-			"https://images.meme-arsenal.com/23c24d089786aef571de84ce6672b27d.jpg",
-			msg,
-			botMsg.message.channelId,
-			botMsg.message
-		)
+			sendAs(
+				kord,
+				"Hank Jabbers",
+				"https://images.meme-arsenal.com/23c24d089786aef571de84ce6672b27d.jpg",
+				e.message ?: "UNKNOWN ERROR, EVERYBODY PANIC!",
+				channelID
+			)
+		}
 	}
 
 	fun explainError(message: String, explanation: String) = generateMessage(
@@ -43,4 +71,10 @@ object Hank : LLM() {
 			append(explanation)
 		}
 	)
+
+	class HankException(
+		message: String,
+		explanation: String?,
+		val respondMessage: PublicMessageInteractionResponse?
+	) : Exception(explanation ?: message)
 }

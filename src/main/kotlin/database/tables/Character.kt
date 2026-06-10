@@ -16,7 +16,7 @@ object CharacterTable : IntIdTable() {
     val gender = varchar("gender", 50).nullable()
     val height = varchar("height", 50).nullable()
     val appearance = text("appearance").nullable()
-    val image = blob("image").nullable()
+    val image = varchar("image", 2083).nullable()
 
     // Military
     val rank = varchar("rank", 50).nullable()

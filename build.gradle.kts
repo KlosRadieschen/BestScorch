@@ -22,6 +22,9 @@ dependencies {
 
     implementation("com.openai:openai-java:latest.release")
 
+    implementation("io.ktor:ktor-client-core:latest.release")
+    implementation("io.ktor:ktor-client-cio:latest.release")
+
     implementation("io.github.classgraph:classgraph:latest.release")
     implementation(kotlin("reflect"))
 
