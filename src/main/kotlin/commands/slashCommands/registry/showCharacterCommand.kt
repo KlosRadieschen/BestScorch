@@ -10,7 +10,6 @@ import dev.kord.common.Color
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.string
-import dev.kord.rest.builder.interaction.user
 import dev.kord.rest.builder.message.embed
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -26,9 +25,6 @@ object ShowCharacterCommand : SlashCommand (
 		string("name", "The name of the character") {
 			required = true
 			autocomplete = true
-		}
-		user("user", "The Character's owner (Only helps with the search results)") {
-			required = false
 		}
 	},
 	run = {
