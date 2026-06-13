@@ -13,7 +13,7 @@ import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.interaction.user
 import messages.webhooks.WebhookSender
 
-@Suppress(names = ["unused"])
+@Suppress("UNUSED")
 object AIReviveCommand : SlashCommand(
 	name = "airevive",
 	description = "Beg Carl to revive your friends",

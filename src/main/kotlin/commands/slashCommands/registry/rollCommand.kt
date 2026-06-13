@@ -8,7 +8,7 @@ import dev.kord.rest.builder.interaction.integer
 import dev.kord.rest.builder.interaction.string
 import kotlin.math.absoluteValue
 
-@Suppress(names = ["unused"])
+@Suppress("UNUSED")
 object RollCommand : SlashCommand(
 	name = "roll",
 	description = "GAMBLING!",

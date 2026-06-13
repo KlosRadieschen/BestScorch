@@ -9,7 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.time.Duration
 
-@Suppress(names = ["unused"])
+@Suppress("UNUSED")
 object DiscussionPollCommand : SlashCommand(
 	name = "discussion-poll",
 	description = "Create the best polls on Discord",

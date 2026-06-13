@@ -11,7 +11,7 @@ import dev.kord.rest.builder.interaction.integer
 import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.interaction.user
 
-@Suppress(names = ["unused"])
+@Suppress("UNUSED")
 object PromoteCommand : SlashCommand(
 	name = "promote",
 	description = "Promote or demote a user",
