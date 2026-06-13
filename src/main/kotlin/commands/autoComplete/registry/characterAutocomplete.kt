@@ -7,10 +7,13 @@ import database.tables.CharacterTable
 import dev.kord.common.entity.Choice
 import dev.kord.common.entity.optional.Optional
 import dev.kord.core.behavior.interaction.suggest
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.like
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-object characterAutocomplete : AutoComplete (
+@Suppress(names = ["unused"])
+object CharacterAutocomplete : AutoComplete (
 	commandName = "character",
 	run = {
 		val characters = transaction(Database.db) {

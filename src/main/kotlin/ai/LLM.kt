@@ -8,8 +8,8 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams
 abstract class LLM {
 	companion object {
 		val token = Config.Tokens.mistralToken
-		const val BASE_URL = "http://127.0.0.1:1234/v1"
-		const val MODEL_ID = "google/gemma-4-12b-qat"
+		const val BASE_URL = "https://api.mistral.ai/v1/"
+		const val MODEL_ID = "mistral-medium-2508"
 	}
 
 	val client: OpenAIClient = OpenAIOkHttpClient.builder()

@@ -7,8 +7,10 @@ import database.tables.CharacterTable
 import dev.kord.common.entity.TextInputStyle
 import dev.kord.core.behavior.interaction.modal
 import dev.kord.core.behavior.interaction.respondEphemeral
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
+@Suppress(names = ["unused"])
 object CharacterFormButton : ButtonCommand (
 	id = "character-form",
 	run = commandRun@{

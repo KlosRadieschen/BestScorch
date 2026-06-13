@@ -1,14 +1,17 @@
 package database.tables
 
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
+import org.jetbrains.exposed.v1.dao.IntEntity
+import org.jetbrains.exposed.v1.dao.IntEntityClass
+import org.jetbrains.exposed.v1.datetime.CurrentDateTime
+import org.jetbrains.exposed.v1.datetime.datetime
 
 object CharacterTable : IntIdTable() {
     // Meta
     val ownerID = ulong("ownerID")
     val sanitizedName = varchar("sanitizedName", 50)
+    val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 
     // Person
     val name =  varchar("name", 50)
@@ -38,6 +41,7 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
     // Meta
     var ownerID by CharacterTable.ownerID
     var sanitizedName by CharacterTable.sanitizedName
+    var createdAt by CharacterTable.createdAt
 
     // Person
     var name by CharacterTable.name
@@ -59,4 +63,14 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
 
     // Misc
     var misc by CharacterTable.misc
+
+    fun mappedShortFields() : Map<String, String?> {
+        return mapOf(
+            "Age" to age,
+            "Gender" to gender,
+            "Height" to height,
+            "Battalion" to battalion,
+            "Rank" to rank,
+        )
+    }
 }

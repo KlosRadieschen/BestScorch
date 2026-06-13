@@ -12,6 +12,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.util.cio.*
 import java.io.File
 
+@Suppress(names = ["unused"])
 object ReviveCommand : SlashCommand(
 	name = "revive",
 	description = "UNMURDER",

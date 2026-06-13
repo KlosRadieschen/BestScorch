@@ -1,0 +1,84 @@
+package commands.slashCommands.registry
+
+import Config
+import ai.systemCharacters.Hank
+import commands.slashCommands.SlashCommand
+import database.Database
+import database.tables.CharacterEntity
+import database.tables.CharacterTable
+import dev.kord.common.Color
+import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.rest.builder.interaction.string
+import dev.kord.rest.builder.interaction.user
+import dev.kord.rest.builder.message.embed
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import org.jetbrains.exposed.v1.core.and
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import kotlin.time.Instant
+
+@Suppress(names = ["unused"])
+object ShowCharacterCommand : SlashCommand (
+	name = "show-character",
+	description = "See your or somebody's character",
+	args = {
+		string("name", "The name of the character") {
+			required = true
+			autocomplete = true
+		}
+		user("user", "The Character's owner (Only helps with the search results)") {
+			required = false
+		}
+	},
+	run = {
+		val response = deferPublicResponse()
+
+		val name = command.strings["name"]!!
+		val sanitizedName = name.lowercase().replace(" ", "_")
+
+		val character = transaction(Database.db) {
+			CharacterEntity.find { CharacterTable.ownerID eq user.id.value and (CharacterTable.sanitizedName eq sanitizedName) }.singleOrNull()
+		}
+
+		if (character == null) {
+			Hank.error<NoSuchElementException>(
+				"Character not found",
+				"""
+					We are in the command "show-character" which you can use to see your or someone else's character given their name.
+					However, the user '${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName}' just put in a character that doesn't exist.
+					This is despite them having a super convenient and well-programmed autocomplete with all characters in the database.
+				""".trimIndent()
+			)
+		} else {
+			response.respond {
+				embed {
+					color = Color(0xFF69B4)
+					title = character.name
+					thumbnail {
+						url = character.image ?: ""
+					}
+
+					for (sf in character.mappedShortFields()) {
+						if (sf.value != null) {
+							field() {
+								this.name = sf.key
+								value = sf.value!!
+								inline = true
+							}
+						}
+					}
+
+					author {
+						this.name = user.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+						icon = user.avatar?.cdnUrl?.toUrl()
+					}
+
+					timestamp = Instant.fromEpochMilliseconds(character.createdAt.toInstant(TimeZone.UTC).toEpochMilliseconds())
+				}
+			}
+		}
+
+		response
+	}
+)

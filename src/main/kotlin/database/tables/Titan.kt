@@ -1,6 +1,9 @@
 package database.tables
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.core.regexp
+import org.jetbrains.exposed.v1.datetime.CurrentDateTime
+import org.jetbrains.exposed.v1.datetime.datetime
 
 object Titan : Table() {
     // Keys
@@ -11,6 +14,7 @@ object Titan : Table() {
     // General
     val name = varchar("name", 50)
     val description = text("description")
+    val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 
     // Appearance
     val design = text("design")

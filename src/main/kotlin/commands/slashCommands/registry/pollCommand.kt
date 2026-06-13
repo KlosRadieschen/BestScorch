@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 
-
+@Suppress(names = ["unused"])
 object PollCommand : SlashCommand(
 	name = "poll",
 	description = "Create the best polls on Discord",

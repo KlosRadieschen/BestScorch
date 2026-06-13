@@ -8,6 +8,7 @@ import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.entity.channel.GuildMessageChannel
 import kotlin.random.Random
 
+@Suppress(names = ["unused"])
 object TictactoeCommand : SlashCommand(
 	name = "tictactoe",
 	description = "Play against the smartest AI in human history",

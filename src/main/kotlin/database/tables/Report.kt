@@ -1,6 +1,8 @@
 package database.tables
 
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.datetime.CurrentDateTime
+import org.jetbrains.exposed.v1.datetime.datetime
 
 object Report : Table() {
     // Keys
@@ -13,4 +15,5 @@ object Report : Table() {
     // Report
     val title = varchar("title", 255)
     val body = text("body")
+    val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 }

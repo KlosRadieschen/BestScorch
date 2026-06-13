@@ -1,9 +1,6 @@
 package database.tables
 
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ReferenceOption
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.v1.core.*
 
 object CombatInfo : Table() {
     // Keys

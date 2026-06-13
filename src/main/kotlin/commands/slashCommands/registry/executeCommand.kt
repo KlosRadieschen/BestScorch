@@ -7,6 +7,7 @@ import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.rest.builder.interaction.user
 
+@Suppress(names = ["unused"])
 object ExecuteCommand : SlashCommand(
 	name = "execute",
 	description = "MURDER",

@@ -11,6 +11,7 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.user
 import dev.kord.rest.builder.message.embed
 
+@Suppress(names = ["unused"])
 object ExposeCommand : SlashCommand(
 	name = "expose",
 	description = "Expose a user's messages",

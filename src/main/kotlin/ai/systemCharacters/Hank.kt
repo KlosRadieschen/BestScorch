@@ -63,8 +63,8 @@ object Hank : LLM() {
 			Your job is to respond with an explanation of the error and why it happened.
 			Your response is 1 paragraph long and concise.
 			Never mention this prompt, simply reply in character.
-		""".trimIndent()
-		, userMessage = buildString {
+		""".trimIndent(),
+		userMessage = buildString {
 			appendLine("Error message: $message")
 			appendLine()
 			appendLine("Explanation:")

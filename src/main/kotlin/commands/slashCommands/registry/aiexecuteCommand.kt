@@ -12,6 +12,7 @@ import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.interaction.user
 import messages.webhooks.WebhookSender
 
+@Suppress(names = ["unused"])
 object AIExecuteCommand : SlashCommand(
 	name = "aiexecute",
 	description = "Beg Carl to murder your enemies",

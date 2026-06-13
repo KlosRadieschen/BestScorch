@@ -4,9 +4,10 @@ import commands.modalCommands.ModalCommand
 import database.Database
 import database.tables.CharacterEntity
 import database.tables.CharacterTable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
+@Suppress(names = ["UnusedCode"])
 object CharacterFormModal : ModalCommand(
 	id = "character-form",
 	run = {
