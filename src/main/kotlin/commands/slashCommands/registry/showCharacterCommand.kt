@@ -7,8 +7,10 @@ import database.Database
 import database.tables.CharacterEntity
 import database.tables.CharacterTable
 import dev.kord.common.Color
+import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.rest.builder.component.actionRow
 import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.message.embed
 import kotlinx.datetime.TimeZone
@@ -57,7 +59,7 @@ object ShowCharacterCommand : SlashCommand (
 					}
 
 					for (sf in character.mappedShortFields()) {
-						if (sf.value != null) {
+						if (!sf.value.isNullOrBlank()) {
 							field() {
 								this.name = sf.key
 								value = sf.value!!
@@ -72,6 +74,16 @@ object ShowCharacterCommand : SlashCommand (
 					}
 
 					timestamp = Instant.fromEpochMilliseconds(character.createdAt.toInstant(TimeZone.UTC).toEpochMilliseconds())
+				}
+
+				if (character.hasLongFields()) actionRow {
+					for (lf in character.mappedLongFields()) {
+						if (!lf.value.isNullOrBlank()) {
+							interactionButton(ButtonStyle.Primary, "show-character:$sanitizedName-${lf.key.lowercase()}") {
+								label = lf.key
+							}
+						}
+					}
 				}
 			}
 		}

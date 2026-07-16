@@ -71,6 +71,19 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
             "Height" to height,
             "Battalion" to battalion,
             "Rank" to rank,
+            "Likes" to likes,
+            "Dislikes" to dislikes,
         )
     }
+
+    fun mappedLongFields() : Map<String, String?> {
+        return mapOf(
+            "Traits" to traits,
+            "Appearance" to appearance,
+            "Lore" to lore,
+            "Misc" to misc,
+        )
+    }
+
+    fun hasLongFields() : Boolean = !(traits.isNullOrBlank() && appearance.isNullOrBlank() && lore.isNullOrBlank() && misc.isNullOrBlank())
 }

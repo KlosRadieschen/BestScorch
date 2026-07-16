@@ -10,7 +10,7 @@ import dev.kord.core.behavior.interaction.respondEphemeral
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
-@Suppress(names = ["unused"])
+@Suppress("UNUSED")
 object CharacterFormButton : ButtonCommand (
 	id = "character-form",
 	run = commandRun@{
@@ -83,7 +83,7 @@ object CharacterFormButton : ButtonCommand (
 
 				"lore" -> {
 					label("Lore"){
-						textInput(TextInputStyle.Short, "lore") {
+						textInput(TextInputStyle.Paragraph, "lore") {
 							value = character.lore.orEmpty()
 							placeholder = character.lore.orEmpty()
 							required = false
@@ -91,7 +91,7 @@ object CharacterFormButton : ButtonCommand (
 					}
 
 					label("Traits"){
-						textInput(TextInputStyle.Short, "traits") {
+						textInput(TextInputStyle.Paragraph, "traits") {
 							 value = character.traits.orEmpty()
 							placeholder = character.traits.orEmpty()
 							required = false
@@ -115,7 +115,7 @@ object CharacterFormButton : ButtonCommand (
 					}
 
 					label("Misc"){
-						textInput(TextInputStyle.Short, "misc") {
+						textInput(TextInputStyle.Paragraph, "misc") {
 							value = character.misc.orEmpty()
 							placeholder = character.misc.orEmpty()
 							required = false
