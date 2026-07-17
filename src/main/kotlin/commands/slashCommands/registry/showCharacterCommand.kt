@@ -76,11 +76,27 @@ object ShowCharacterCommand : SlashCommand (
 					timestamp = Instant.fromEpochMilliseconds(character.createdAt.toInstant(TimeZone.UTC).toEpochMilliseconds())
 				}
 
-				if (character.hasLongFields()) actionRow {
-					for (lf in character.mappedLongFields()) {
-						if (!lf.value.isNullOrBlank()) {
-							interactionButton(ButtonStyle.Primary, "show-character:$sanitizedName-${lf.key.lowercase()}") {
-								label = lf.key
+				transaction {
+					if (character.hasLongFields() || character.stats != null) actionRow {
+						if (character.hasLongFields()) {
+							for (lf in character.mappedLongFields()) {
+								if (!lf.value.isNullOrBlank()) {
+									interactionButton(
+										ButtonStyle.Primary,
+										"show-character:$sanitizedName-${lf.key.lowercase()}"
+									) {
+										label = lf.key
+									}
+								}
+							}
+						}
+
+						if (character.stats != null) {
+							interactionButton(
+								ButtonStyle.Primary,
+								"show-character:$sanitizedName-stats"
+							) {
+								label = "Stats"
 							}
 						}
 					}

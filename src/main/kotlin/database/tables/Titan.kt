@@ -12,20 +12,23 @@ object Titan : Table() {
     val ownerID = integer("fk_characterID").references(CharacterTable.id)
 
     // General
-    val name = varchar("name", 50)
-    val description = text("description")
+    val name = varchar("name", 50).nullable()
+    val titanClass = varchar("class", 50).nullable()
+    val chassis = varchar("chassis", 50).nullable()
+    val description = text("description").nullable()
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 
     // Appearance
-    val design = text("design")
+    val design = text("design").nullable()
 
     // Combat
-    val primaryWeapon = text("primaryWeapon")
-    val ordnance = text("ordnance")
-    val defensiveAbility = text("defensiveAbility")
-    val pointDefense = text("pointDefense")
-    val core = text("core")
+    val primaryWeapon = text("primaryWeapon").nullable()
+    val ordinance = text("ordinance").nullable()
+    val defensive = text("defensive").nullable()
+    val tactical = text("tactical").nullable()
+    val kits = text("kits").nullable()
+    val core = text("core").nullable()
 
     // Misc
-    val misc = text("misc")
+    val misc = text("misc").nullable()
 }

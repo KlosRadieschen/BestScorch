@@ -24,6 +24,8 @@ object CharacterTable : IntIdTable() {
     // Military
     val rank = varchar("rank", 50).nullable()
     val battalion = varchar("battalion", 50).nullable()
+    val combatClass = varchar("combatClass", 50).nullable()
+    val specialties = varchar("specialties", 50).nullable()
 
     // Lore
     val lore = text("lore").nullable()
@@ -54,6 +56,8 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
     // Military
     var rank by CharacterTable.rank
     var battalion by CharacterTable.battalion
+    var combatClass by CharacterTable.combatClass
+    var specialties by CharacterTable.specialties
 
     // Lore
     var lore by CharacterTable.lore
@@ -64,6 +68,9 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
     // Misc
     var misc by CharacterTable.misc
 
+    // References
+    val stats by StatsEntity optionalBackReferencedOn StatsTable.character
+
     fun mappedShortFields() : Map<String, String?> {
         return mapOf(
             "Age" to age,
@@ -71,6 +78,8 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
             "Height" to height,
             "Battalion" to battalion,
             "Rank" to rank,
+            "Combat Class" to combatClass,
+            "Specialties" to specialties,
             "Likes" to likes,
             "Dislikes" to dislikes,
         )

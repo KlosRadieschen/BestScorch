@@ -17,6 +17,11 @@ object CharacterFormButton : ButtonCommand (
 		val characterName = componentId.split(":")[1].split("-")[0]
 		val formChoice = componentId.split(":")[1].split("-")[1]
 
+		if (formChoice == "create") {
+			respondEphemeral { content = "Not implemented yet" }
+			return@commandRun
+		}
+
 		val character = transaction(Database.db) {
 			CharacterEntity.find { CharacterTable.sanitizedName eq characterName }.first()
 		}
@@ -27,99 +32,50 @@ object CharacterFormButton : ButtonCommand (
 		}
 
 		modal("$formChoice Info Form", componentId) {
+			fun addModalInput(
+				label: String,
+				style: TextInputStyle,
+				currentValue: String?
+			) {
+				label(label) {
+					textInput(style, label.lowercase()) {
+						value = currentValue.orEmpty()
+						placeholder = currentValue.orEmpty()
+						required = false
+					}
+				}
+			}
+
 			when (formChoice) {
 				"basic" -> {
-					label("Age"){
-						textInput(TextInputStyle.Short, "age") {
-							value = character.age.orEmpty()
-							placeholder = character.age.orEmpty()
-							required = false
-						}
-					}
-
-					label("Gender"){
-						textInput(TextInputStyle.Short, "gender") {
-							value = character.gender.orEmpty()
-							placeholder = character.gender.orEmpty()
-							required = false
-						}
-					}
-
-					label("Height"){
-						textInput(TextInputStyle.Short, "height") {
-							value = character.height.orEmpty()
-							placeholder = character.height.orEmpty()
-							required = false
-						}
-					}
-
-					label("Appearance"){
-						textInput(TextInputStyle.Paragraph, "appearance") {
-							value = character.appearance.orEmpty()
-							placeholder = character.appearance.orEmpty()
-							required = false
-						}
-					}
+					addModalInput("Age", TextInputStyle.Short, character.age)
+					addModalInput("Gender", TextInputStyle.Short, character.gender)
+					addModalInput("Height", TextInputStyle.Short, character.height)
+					addModalInput("Appearance", TextInputStyle.Paragraph, character.appearance)
 				}
 
 				"military" -> {
-					label("Battalion"){
-						textInput(TextInputStyle.Short, "battalion") {
-							value = character.battalion.orEmpty()
-							placeholder = character.battalion.orEmpty()
-							required = false
-						}
-					}
-
-					label("Rank"){
-						textInput(TextInputStyle.Short, "rank") {
-							value = character.rank.orEmpty()
-							placeholder = character.rank.orEmpty()
-							required = false
-						}
-					}
-
+					addModalInput("Battalion", TextInputStyle.Short, character.battalion)
+					addModalInput("Rank", TextInputStyle.Short, character.rank)
+					addModalInput("Combat Class", TextInputStyle.Short, character.combatClass)
+					addModalInput("Specialties", TextInputStyle.Short, character.specialties)
 				}
 
 				"lore" -> {
-					label("Lore"){
-						textInput(TextInputStyle.Paragraph, "lore") {
-							value = character.lore.orEmpty()
-							placeholder = character.lore.orEmpty()
-							required = false
-						}
-					}
+					addModalInput("Lore", TextInputStyle.Paragraph, character.lore)
+					addModalInput("Traits", TextInputStyle.Paragraph, character.traits)
+					addModalInput("Likes", TextInputStyle.Short, character.likes)
+					addModalInput("Dislikes", TextInputStyle.Short, character.dislikes)
+					addModalInput("Misc", TextInputStyle.Paragraph, character.misc)
+				}
 
-					label("Traits"){
-						textInput(TextInputStyle.Paragraph, "traits") {
-							 value = character.traits.orEmpty()
-							placeholder = character.traits.orEmpty()
-							required = false
-						}
-					}
-
-					label("Likes"){
-						textInput(TextInputStyle.Short, "likes") {
-							value = character.likes.orEmpty()
-							placeholder = character.likes.orEmpty()
-							required = false
-						}
-					}
-
-					label("Dislikes"){
-						textInput(TextInputStyle.Short, "dislikes") {
-							value = character.dislikes.orEmpty()
-							placeholder = character.dislikes.orEmpty()
-							required = false
-						}
-					}
-
-					label("Misc"){
-						textInput(TextInputStyle.Paragraph, "misc") {
-							value = character.misc.orEmpty()
-							placeholder = character.misc.orEmpty()
-							required = false
-						}
+				"stats" -> {
+					transaction(Database.db) {
+						addModalInput("Marksmanship", TextInputStyle.Short, character.stats?.marksmanship?.toString() ?: "")
+						addModalInput("CQC", TextInputStyle.Short, character.stats?.cqc?.toString() ?: "")
+						addModalInput("Mobility", TextInputStyle.Short, character.stats?.mobility?.toString() ?: "")
+						addModalInput("Tactics", TextInputStyle.Short, character.stats?.tactics?.toString() ?: "")
+						addModalInput("Titan Handling", TextInputStyle.Short, character.stats?.titanHandling?.toString() ?: "")
 					}
 				}
 			}

@@ -36,10 +36,10 @@ object CharacterCommand : SlashCommand (
 
 		respondPublic {
 			content = """
-				Character Form for "$name" (by ${user.mention})
+				# Character Form for "$name" (by ${user.mention})
 				
 				- Basic Info: age, gender, height, appearance
-				- Military Info: battalion, rank
+				- Military Info: battalion, rank, combat class, specialties
 				- Lore Info: lore, traits, likes, dislikes, misc
 				
 			""".trimIndent()
@@ -55,6 +55,10 @@ object CharacterCommand : SlashCommand (
 
 				interactionButton(ButtonStyle.Primary, "character-form:$sanitizedName-lore") {
 					label = "Add lore info"
+				}
+
+				interactionButton(ButtonStyle.Primary, "character-form:$sanitizedName-stats") {
+					label = "Add Stats"
 				}
 			}
 
