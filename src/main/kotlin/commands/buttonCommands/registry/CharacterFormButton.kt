@@ -3,18 +3,16 @@ package commands.buttonCommands.registry
 import commands.buttonCommands.ButtonCommand
 import database.Database
 import database.tables.CharacterEntity
-import database.tables.CharacterTable
 import dev.kord.common.entity.TextInputStyle
 import dev.kord.core.behavior.interaction.modal
 import dev.kord.core.behavior.interaction.respondEphemeral
-import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 
 @Suppress("UNUSED")
 object CharacterFormButton : ButtonCommand (
 	id = "character-form",
 	run = commandRun@{
-		val characterName = componentId.split(":")[1].split("-")[0]
+		val characterID = componentId.split(":")[1].split("-")[0]
 		val formChoice = componentId.split(":")[1].split("-")[1]
 
 		if (formChoice == "create") {
@@ -23,7 +21,7 @@ object CharacterFormButton : ButtonCommand (
 		}
 
 		val character = transaction(Database.db) {
-			CharacterEntity.find { CharacterTable.sanitizedName eq characterName }.first()
+			CharacterEntity.findById(characterID.toInt())!!
 		}
 
 		if (character.ownerID != user.id.value) {
@@ -40,7 +38,6 @@ object CharacterFormButton : ButtonCommand (
 				label(label) {
 					textInput(style, label.lowercase()) {
 						value = currentValue.orEmpty()
-						placeholder = currentValue.orEmpty()
 						required = false
 					}
 				}
@@ -70,7 +67,7 @@ object CharacterFormButton : ButtonCommand (
 				}
 
 				"stats" -> {
-					transaction(Database.db) {
+					transaction {
 						addModalInput("Marksmanship", TextInputStyle.Short, character.stats?.marksmanship?.toString() ?: "")
 						addModalInput("CQC", TextInputStyle.Short, character.stats?.cqc?.toString() ?: "")
 						addModalInput("Mobility", TextInputStyle.Short, character.stats?.mobility?.toString() ?: "")

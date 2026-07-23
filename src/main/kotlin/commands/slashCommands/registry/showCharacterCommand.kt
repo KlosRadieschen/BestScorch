@@ -101,6 +101,14 @@ object ShowCharacterCommand : SlashCommand (
 						}
 					}
 				}
+
+				transaction {
+					if (character.titan != null) actionRow {
+						interactionButton(ButtonStyle.Primary, "show-character:$sanitizedName-showtitan") {
+							label = "Titan"
+						}
+					}
+				}
 			}
 		}
 

@@ -6,19 +6,21 @@ import database.Database
 import database.tables.CharacterEntity
 import database.tables.CharacterTable
 import database.tables.StatsEntity
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import java.sql.SQLIntegrityConstraintViolationException
 
 @Suppress("UNUSED")
 object CharacterFormModal : ModalCommand(
 	id = "character-form",
 	run = {
-		val characterName = modalId.split(":")[1].split("-")[0]
+		val characterID = modalId.split(":")[1].split("-")[0]
 		val formChoice = modalId.split(":")[1].split("-")[1]
 
 		try {
 			transaction(Database.db) {
-				CharacterEntity.findSingleByAndUpdate(CharacterTable.sanitizedName eq characterName) {
+				CharacterEntity.findSingleByAndUpdate(CharacterTable.id eq EntityID(characterID.toInt(), CharacterTable) ) {
 					when (formChoice) {
 						"basic" -> {
 							it.age = textInputs["age"]?.value.orEmpty()
@@ -54,8 +56,8 @@ object CharacterFormModal : ModalCommand(
 					}
 				}
 			}
-		} catch (_: Exception) {
-			Hank.error<IllegalStateException>(
+		} catch (_: SQLIntegrityConstraintViolationException) {
+			Hank.error<IllegalArgumentException>(
 				"All values must be between 0 and 22",
 				"The user was setting stats for his OC, but he inputted a value that was outside of the allowed range (0-22)"
 			)

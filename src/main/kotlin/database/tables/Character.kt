@@ -70,6 +70,7 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
 
     // References
     val stats by StatsEntity optionalBackReferencedOn StatsTable.character
+    val titan by TitanEntity optionalBackReferencedOn TitanTable.assignedCharacterID
 
     fun mappedShortFields() : Map<String, String?> {
         return mapOf(
@@ -94,5 +95,5 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
         )
     }
 
-    fun hasLongFields() : Boolean = !(traits.isNullOrBlank() && appearance.isNullOrBlank() && lore.isNullOrBlank() && misc.isNullOrBlank())
+    fun hasLongFields() : Boolean = mappedLongFields().isEmpty()
 }
