@@ -8,6 +8,7 @@ import dev.kord.core.behavior.channel.withTyping
 import dev.kord.core.behavior.reply
 import messages.responders.Responder
 
+@Suppress("UNUSED")
 object ScorchResponder : Responder(
 	check = { (content.lowercase().contains(Regex("(?<!\\\\)\\bscorch\\b")) || content.contains("<@${kord.selfId}>") || referencedMessage?.author?.id == kord.selfId) && !(author?.isExecuted()?:false) },
 	execute = {
@@ -19,7 +20,6 @@ object ScorchResponder : Responder(
 		}
 	},
 	executeWithQueue = {
-		try {
 			val message = this
 			channel.withTyping {
 				val llmResponse = Scorch.respond(message) ?: "AI is not responding <:verger:1225937868023795792>"
@@ -34,8 +34,5 @@ object ScorchResponder : Responder(
 				if (chunks.size > 1)
 					chunks.drop(1).forEach { c -> botMessage.reply { content = c } }
 			}
-		} finally {
-			CharacterLLM.mutex.unlock()
-		}
 	}
 )

@@ -4,7 +4,13 @@ import Config
 import ai.helpers.MessageQueue
 import com.openai.models.chat.completions.ChatCompletionCreateParams
 import dev.kord.core.entity.Message
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.jvm.optionals.getOrNull
+import kotlin.time.Duration.Companion.seconds
 
 open class CharacterLLM (val name: String, val intro: String) : LLM() {
 	companion object {
@@ -28,38 +34,43 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 		userMessage = message)
 
 	suspend fun generateMessage(messageHistory: MessageQueue, prompt: String, userMessage: Message): String? {
-		mutex.lock()
+		mutex.withLock {
+			val paramsBuilder = ChatCompletionCreateParams.builder()
+				.model(MODEL_ID)
+				.addSystemMessage(prompt)
 
-		val paramsBuilder = ChatCompletionCreateParams.builder()
-			.model(MODEL_ID)
-			.addSystemMessage(prompt)
+			if (!messageHistory.messages.any { m -> m.msg == userMessage }) messageHistory.addMessage(
+				userMessage,
+				MessageQueue.Type.UserMessage
+			)
 
-		if (!messageHistory.messages.any { m -> m.msg == userMessage }) messageHistory.addMessage(userMessage, MessageQueue.Type.UserMessage)
+			val authorName = userMessage.author?.asMember(Config.Snowflakes.ahaGuildID)?.effectiveName
+				?: userMessage.data.author.username
 
-		val authorName = userMessage.author?.asMember(Config.Snowflakes.ahaGuildID)?.effectiveName
-			?: userMessage.data.author.username
-
-		messageHistory.messages.forEach {
-			when (it.type) {
-				MessageQueue.Type.UserMessage -> paramsBuilder.addUserMessage("$authorName: ${it.msg.content}")
-				MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("$authorName: ${it.msg.content}")
+			messageHistory.messages.forEach {
+				when (it.type) {
+					MessageQueue.Type.UserMessage -> paramsBuilder.addUserMessage("$authorName: ${it.msg.content}")
+					MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("$authorName: ${it.msg.content}")
+				}
 			}
+
+			val params = paramsBuilder.build()
+
+			val completion = withTimeoutOrNull(15.seconds) {
+				runInterruptible(Dispatchers.IO) {
+					client.chat().completions().create(params)
+				}
+			}
+
+			val aiMessage = completion?.choices()
+				?.firstOrNull()
+				?.message()
+				?.content()
+				?.getOrNull()
+
+			// messageHistory.addMessage("$name: $aiMessage", MessageQueue.Type.UserMessage)
+
+			return aiMessage
 		}
-
-		val params = paramsBuilder.build()
-
-		val completion = runCatching { client.chat().completions().create(params) }.getOrNull()
-			?: return null
-
-		val aiMessage = completion.choices()
-			.firstOrNull()
-			?.message()
-			?.content()
-			?.orElse("")
-			?: ""
-
-		 // messageHistory.addMessage("$name: $aiMessage", MessageQueue.Type.UserMessage)
-
-		return aiMessage
 	}
 }

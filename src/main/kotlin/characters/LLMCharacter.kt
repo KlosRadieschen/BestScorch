@@ -28,7 +28,6 @@ abstract class LLMCharacter (
 			)
 		},
 		executeWithQueue = {
-			try {
 				val llmResponse = llm.respond(this) ?: "AI is currently not enabled"
 				val chunks = llmResponse.chunked(2000)
 
@@ -45,9 +44,6 @@ abstract class LLMCharacter (
 
 				if (chunks.size > 1)
 					chunks.drop(1).forEach { c -> message.reply { content = c } }
-			} finally {
-				CharacterLLM.mutex.unlock()
-			}
 		}
 	)
 )
