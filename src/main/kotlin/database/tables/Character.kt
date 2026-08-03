@@ -10,7 +10,6 @@ import org.jetbrains.exposed.v1.datetime.datetime
 object CharacterTable : IntIdTable() {
     // Meta
     val ownerID = ulong("ownerID")
-    val sanitizedName = varchar("sanitizedName", 50)
     val createdAt = datetime("created_at").defaultExpression(CurrentDateTime)
 
     // Person
@@ -42,7 +41,6 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
 
     // Meta
     var ownerID by CharacterTable.ownerID
-    var sanitizedName by CharacterTable.sanitizedName
     var createdAt by CharacterTable.createdAt
 
     // Person

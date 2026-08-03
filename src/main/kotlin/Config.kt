@@ -1,4 +1,5 @@
 import dev.kord.common.entity.Snowflake
+import dev.kord.core.entity.User
 import io.github.cdimascio.dotenv.Dotenv
 
 object Config {
@@ -26,6 +27,8 @@ object Config {
         }
 
         val executedRoleID = Snowflake(dotenv["EXECUTED_ROLE_ID"]!!)
+
+        suspend fun User.ahaNickname() = this.asMember(ahaGuildID).effectiveName
     }
 
     object Database {

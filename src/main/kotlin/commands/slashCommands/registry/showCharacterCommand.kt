@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Hank
 import commands.slashCommands.SlashCommand
 import database.Database
@@ -33,10 +33,9 @@ object ShowCharacterCommand : SlashCommand (
 		val response = deferPublicResponse()
 
 		val name = command.strings["name"]!!
-		val sanitizedName = name.lowercase().replace(" ", "_")
 
 		val character = transaction(Database.db) {
-			CharacterEntity.find { CharacterTable.sanitizedName eq sanitizedName }.singleOrNull()
+			CharacterEntity.find { CharacterTable.name eq name }.singleOrNull()
 		}
 
 		if (character == null) {
@@ -45,7 +44,7 @@ object ShowCharacterCommand : SlashCommand (
 				"Character not found",
 				"""
 					We are in the command "show-character" which you can use to see your or someone else's character given their name.
-					However, the user '${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName}' just put in a character that doesn't exist.
+					However, the user '${user.ahaNickname()}' just put in a character that doesn't exist.
 					This is despite them having a super convenient and well-programmed autocomplete with all characters in the database.
 				""".trimIndent()
 			)
@@ -69,12 +68,14 @@ object ShowCharacterCommand : SlashCommand (
 					}
 
 					author {
-						this.name = kord.getUser(Snowflake(character.ownerID))!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+						this.name = kord.getUser(Snowflake(character.ownerID))!!.ahaNickname()
 						icon = kord.getUser(Snowflake(character.ownerID))!!.avatar?.cdnUrl?.toUrl()
 					}
 
 					timestamp = Instant.fromEpochMilliseconds(character.createdAt.toInstant(TimeZone.UTC).toEpochMilliseconds())
 				}
+
+				val charID = character.id.value
 
 				transaction {
 					if (character.hasLongFields() || character.stats != null) actionRow {
@@ -83,7 +84,7 @@ object ShowCharacterCommand : SlashCommand (
 								if (!lf.value.isNullOrBlank()) {
 									interactionButton(
 										ButtonStyle.Primary,
-										"show-character:$sanitizedName-${lf.key.lowercase()}"
+										"show-character:$charID-${lf.key.lowercase()}"
 									) {
 										label = lf.key
 									}
@@ -94,7 +95,7 @@ object ShowCharacterCommand : SlashCommand (
 						if (character.stats != null) {
 							interactionButton(
 								ButtonStyle.Primary,
-								"show-character:$sanitizedName-stats"
+								"show-character:$charID-stats"
 							) {
 								label = "Stats"
 							}
@@ -104,7 +105,7 @@ object ShowCharacterCommand : SlashCommand (
 
 				transaction {
 					if (character.titan != null) actionRow {
-						interactionButton(ButtonStyle.Primary, "show-character:$sanitizedName-showtitan") {
+						interactionButton(ButtonStyle.Primary, "show-character:$charID-showtitan") {
 							label = "Titan"
 						}
 					}

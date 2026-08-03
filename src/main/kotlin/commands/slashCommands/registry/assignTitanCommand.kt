@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Hank
 import commands.slashCommands.SlashCommand
 import database.Database
@@ -40,16 +40,15 @@ object AssignTitanCommand : SlashCommand (
 			"Titan not found",
 			"""
 				We are in the command "assign-titan" which you can use to see your or someone else's titan given their callsign.
-				However, the user '${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName}' just put in a titan callsign that doesn't exist.
+				However, the user '${user.ahaNickname()}' just put in a titan callsign that doesn't exist.
 				This is despite them having a super convenient and well-programmed autocomplete with all titans in the database.
 			""".trimIndent()
 		)
 
 		val name = command.strings["character"]!!
-		val sanitizedName = name.lowercase().replace(" ", "_")
 
 		val character = transaction(Database.db) {
-			CharacterEntity.find { CharacterTable.sanitizedName eq sanitizedName }.singleOrNull()
+			CharacterEntity.find { CharacterTable.name eq name }.singleOrNull()
 		}
 
 		if (character == null) Hank.error<NoSuchElementException>(
@@ -57,7 +56,7 @@ object AssignTitanCommand : SlashCommand (
 			"Character not found",
 			"""
 				We are in the command "show-character" which you can use to see your or someone else's character given their name.
-				However, the user '${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName}' just put in a character that doesn't exist.
+				However, the user '${user.ahaNickname()}' just put in a character that doesn't exist.
 				This is despite them having a super convenient and well-programmed autocomplete with all characters in the database.
 			""".trimIndent()
 		)

@@ -1,6 +1,7 @@
 package commands.helpers.polls
 
 import Config
+import Config.Snowflakes.ahaNickname
 import dev.kord.common.Color
 import dev.kord.common.DiscordTimestampStyle
 import dev.kord.common.entity.ArchiveDuration
@@ -43,7 +44,7 @@ class Poll (
 					field("Expires " + Instant.fromEpochMilliseconds(System.currentTimeMillis()+duration.inWholeMilliseconds).toMessageFormat(DiscordTimestampStyle.RelativeTime), false)
 
 					author {
-						name = user.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+						name = user.ahaNickname()
 						icon = user.avatar?.cdnUrl?.toUrl()
 					}
 
@@ -88,7 +89,7 @@ class Poll (
 							field("Expired " + Instant.fromEpochMilliseconds(System.currentTimeMillis()).toMessageFormat(DiscordTimestampStyle.RelativeTime), false)
 
 							author {
-								name = user.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+								name = user.ahaNickname()
 								icon = user.avatar?.cdnUrl?.toUrl()
 							}
 
@@ -104,7 +105,7 @@ class Poll (
 					title = question
 
 					author {
-						name = user.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+						name = user.ahaNickname()
 						icon = user.avatar?.cdnUrl?.toUrl()
 					}
 

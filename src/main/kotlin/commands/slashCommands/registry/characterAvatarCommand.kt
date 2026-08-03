@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Hank
 import commands.slashCommands.SlashCommand
 import commands.slashCommands.registry.CharacterAvatarCommand.rehostImage
@@ -41,7 +41,7 @@ object CharacterAvatarCommand : SlashCommand (
 				defaultMsg = "The attachment must be an image",
 				explanation = """
 					We are in he command "character-avatar" where a user can upload an avatar/image for their character.
-					However, the user ${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName} tried to upload a non-image attachment.
+					However, the user ${user.ahaNickname()} tried to upload a non-image attachment.
 				""".trimIndent(),
 				response = response
 			)
@@ -56,13 +56,13 @@ object CharacterAvatarCommand : SlashCommand (
 				defaultMsg = "The attachment must be an image",
 				explanation = """
 					We are in he command "character-avatar" where a user can upload an avatar/image for their character.
-					However, the user ${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName} selected a character that doesn't exist.
+					However, the user ${user.ahaNickname()} selected a character that doesn't exist.
 				""".trimIndent(),
 				response = response
 			)
 		}
 
-		val msg = rehostImage(response, command.attachments["image"]!!.url, "${character!!.sanitizedName}-avatar.png")
+		val msg = rehostImage(response, command.attachments["image"]!!.url, "${character!!.id}-avatar.png")
 
 		transaction(Database.db) {
 			CharacterEntity.findSingleByAndUpdate( CharacterTable.name eq command.strings["name"]!! ) {

@@ -23,16 +23,16 @@ object CharacterCommand : SlashCommand (
 	},
 	run = {
 		val name = command.strings["name"]!!
-		val sanitizedName = name.lowercase().replace(" ", "_")
 
 		// INSERT IF NOT EXISTS
 		val character = transaction(Database.db) {
 			CharacterEntity.find { CharacterTable.name eq name }.firstOrNull() ?: CharacterEntity.new {
 				this.name = name
-				this.sanitizedName = sanitizedName
 				this.ownerID = user.id.value
 			}
 		}
+
+		val charID = character.id.value
 
 		respondPublic {
 			content = """
@@ -53,25 +53,25 @@ object CharacterCommand : SlashCommand (
 			""".trimIndent()
 
 			actionRow {
-				interactionButton(ButtonStyle.Primary, "character-form:${character.id.value}-basic") {
+				interactionButton(ButtonStyle.Primary, "character-form:$charID-basic") {
 					label = "Add basic info"
 				}
 
-				interactionButton(ButtonStyle.Primary, "character-form:${character.id.value}-military") {
+				interactionButton(ButtonStyle.Primary, "character-form:$charID-military") {
 					label = "Add military info"
 				}
 
-				interactionButton(ButtonStyle.Primary, "character-form:${character.id.value}-lore") {
+				interactionButton(ButtonStyle.Primary, "character-form:$charID-lore") {
 					label = "Add lore info"
 				}
 
-				interactionButton(ButtonStyle.Primary, "character-form:${character.id.value}-stats") {
+				interactionButton(ButtonStyle.Primary, "character-form:$charID-stats") {
 					label = "Add stats"
 				}
 			}
 
 			actionRow {
-				interactionButton(ButtonStyle.Success, "character-form:${character.id.value}-create") {
+				interactionButton(ButtonStyle.Success, "character-form:$charID-create") {
 					label = "Create member file"
 					disabled = true
 				}

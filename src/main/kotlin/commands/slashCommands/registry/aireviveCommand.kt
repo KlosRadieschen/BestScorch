@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Carl
 import ai.systemCharacters.Hank
 import commands.helpers.Execution.execute
@@ -29,7 +29,7 @@ object AIReviveCommand : SlashCommand(
 		val response = deferPublicResponse()
 
 		val beggarName = user.effectiveName
-		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.ahaNickname()
 		val reasoning = command.strings["reasoning"]!!
 
 		if (!command.users["user"]!!.isExecuted()) Hank.error<IllegalArgumentException>(

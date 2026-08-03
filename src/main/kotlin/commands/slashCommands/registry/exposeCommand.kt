@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Hank
 import commands.helpers.Exposer.exposeMessages
 import commands.slashCommands.SlashCommand
@@ -38,7 +38,7 @@ object ExposeCommand : SlashCommand(
 					}
 
 					author {
-						name = command.users["user"]!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+						name = command.users["user"]!!.ahaNickname()
 						icon = command.users["user"]!!.avatar?.cdnUrl?.toUrl()
 					}
 				}
@@ -49,7 +49,7 @@ object ExposeCommand : SlashCommand(
 				e.message ?: e.toString(),
 				"""
 				We are in the command "expose" which lets you expose the last 5 messages of a user, even if they are edited or deleted.
-				However, ${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName} tried using it on someone who hasn't posted any messages since the last restart of this bot.
+				However, ${user.ahaNickname()} tried using it on someone who hasn't posted any messages since the last restart of this bot.
 			""".trimIndent())
 		}
 

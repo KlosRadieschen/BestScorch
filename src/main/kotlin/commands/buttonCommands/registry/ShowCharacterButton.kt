@@ -1,11 +1,10 @@
 package commands.buttonCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Hank
 import commands.buttonCommands.ButtonCommand
 import database.Database
 import database.tables.CharacterEntity
-import database.tables.CharacterTable
 import database.tables.StatsEntity
 import database.tables.TitanTable.callsign
 import dev.kord.common.Color
@@ -17,7 +16,6 @@ import dev.kord.rest.builder.component.actionRow
 import dev.kord.rest.builder.message.embed
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import kotlin.time.Instant
 
@@ -25,11 +23,11 @@ import kotlin.time.Instant
 object ShowCharacterButton : ButtonCommand (
 	id = "show-character",
 	run = commandRun@{
-		val characterName = componentId.split(":")[1].split("-")[0]
+		val characterID = componentId.split(":")[1].split("-")[0]
 		val formChoice = componentId.split(":")[1].split("-")[1].replaceFirstChar { it.uppercase() }
 
 		val character = transaction(Database.db) {
-			CharacterEntity.find { CharacterTable.sanitizedName eq characterName }.first()
+			CharacterEntity.findById(characterID.toInt())!!
 		}
 
 		if (formChoice == "Showtitan") {
@@ -63,7 +61,7 @@ object ShowCharacterButton : ButtonCommand (
 					}
 
 					author {
-						this.name = kord.getUser(Snowflake(titan.ownerID))!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+						this.name = kord.getUser(Snowflake(titan.ownerID))!!.ahaNickname()
 						icon = kord.getUser(Snowflake(titan.ownerID))!!.avatar?.cdnUrl?.toUrl()
 					}
 

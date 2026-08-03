@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Carl
 import ai.systemCharacters.Hank
 import commands.helpers.AdminAbusers.isImmune
@@ -37,7 +37,7 @@ object AIExecuteCommand : SlashCommand(
 		)
 
 		val assailantName = user.effectiveName
-		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+		val targetName = kord.getUser(Snowflake(command.users["user"]!!.id.value))!!.ahaNickname()
 		val reasoning = command.strings["reasoning"]!!
 
 		response.respond { content = "Summoning Carl" }

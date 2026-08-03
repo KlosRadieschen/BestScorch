@@ -1,6 +1,6 @@
 package commands.slashCommands.registry
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.systemCharacters.Hank
 import commands.slashCommands.SlashCommand
 import database.Database
@@ -44,7 +44,7 @@ object ShowTitanCommand : SlashCommand (
 				"Titan not found",
 				"""
 					We are in the command "show-titan" which you can use to see your or someone else's titan given their callsign.
-					However, the user '${user.asMember(Config.Snowflakes.ahaGuildID).effectiveName}' just put in a titan callsign that doesn't exist.
+					However, the user '${user.ahaNickname()}' just put in a titan callsign that doesn't exist.
 					This is despite them having a super convenient and well-programmed autocomplete with all titans in the database.
 				""".trimIndent()
 			)
@@ -68,7 +68,7 @@ object ShowTitanCommand : SlashCommand (
 					}
 
 					author {
-						this.name = kord.getUser(Snowflake(titan.ownerID))!!.asMember(Config.Snowflakes.ahaGuildID).effectiveName
+						this.name = kord.getUser(Snowflake(titan.ownerID))!!.ahaNickname()
 						icon = kord.getUser(Snowflake(titan.ownerID))!!.avatar?.cdnUrl?.toUrl()
 					}
 
