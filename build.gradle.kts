@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.0"
+    application
 }
 
 group = "com.klosradieschen"
@@ -41,6 +42,10 @@ dependencies {
 
 kotlin {
     jvmToolchain(21)
+}
+
+application {
+    mainClass.set("com.klosradieschen.Main")
 }
 
 tasks.test {
