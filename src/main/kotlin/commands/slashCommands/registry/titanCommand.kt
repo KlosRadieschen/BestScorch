@@ -36,9 +36,17 @@ object TitanCommand : SlashCommand (
 			content = """
 				# Titan Form for "$callsign" (by ${user.mention})
 				
-				- Basic Info: age, gender, height, appearance
-				- Military Info: battalion, rank, combat class, specialties
-				- Lore Info: lore, traits, likes, dislikes, misc
+				Welcome to titan creation.
+				- You can use the buttons below this message to add or edit any information about your titan.
+				- You can save and quit at any point, nothing will be lost as long as you click "Submit".
+				- You can get this message as many times as you want, you only need to use /titan again.
+				- When there are multiple messages for the same OC, it doesn't matter where you click the buttons.
+				- You can assign your titan to any OC with /assign-titan
+				
+				The buttons lead to the following information:
+				- Basic Info: name, chassis, class, kits
+				- Military Info: primary weapon, ordinance, defensive ability, tactical ability, core
+				- Lore Info: description, design/appearance, misc
 				
 			""".trimIndent()
 

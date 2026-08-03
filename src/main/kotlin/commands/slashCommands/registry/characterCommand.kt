@@ -38,10 +38,18 @@ object CharacterCommand : SlashCommand (
 			content = """
 				# Character Form for "$name" (by ${user.mention})
 				
+				Welcome to character creation.
+				- You can use the buttons below this message to add or edit any information about your OC.
+				- You can save and quit at any point, nothing will be lost as long as you click "Submit".
+				- You can get this message as many times as you want, you only need to use /character again.
+				- When there are multiple messages for the same OC, it doesn't matter where you click the buttons.
+				- You can add a PFP with /character-avatar
+				
+				The buttons lead to the following information:
 				- Basic Info: age, gender, height, appearance
 				- Military Info: battalion, rank, combat class, specialties
 				- Lore Info: lore, traits, likes, dislikes, misc
-				
+				- Stats: marksmanship, CQC, mobility, tactics, titan handling
 			""".trimIndent()
 
 			actionRow {
