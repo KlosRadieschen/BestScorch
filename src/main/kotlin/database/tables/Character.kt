@@ -93,5 +93,5 @@ class CharacterEntity(id: EntityID<Int>) : IntEntity(id) {
         )
     }
 
-    fun hasLongFields() : Boolean = mappedLongFields().isEmpty()
+    fun hasLongFields() : Boolean = mappedLongFields().isNotEmpty()
 }

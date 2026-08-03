@@ -24,7 +24,7 @@ object TitanAutocomplete : AutoComplete (
 		else suggest(
 			choices = titans.map {
 				Choice.StringChoice(
-					"${it.callsign} ${it.name ?: ""}",
+					"${it.callsign}: ${it.name ?: ""}",
 					value = it.callsign,
 					nameLocalizations = Optional.Missing(),
 				)

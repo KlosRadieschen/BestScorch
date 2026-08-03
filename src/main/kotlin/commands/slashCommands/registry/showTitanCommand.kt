@@ -52,7 +52,7 @@ object ShowTitanCommand : SlashCommand (
 			response.respond {
 				embed {
 					color = Color(0xFF69B4)
-					title = "${titan.callsign} ${titan.name ?: ""}"
+					title = "${titan.callsign}: ${titan.name ?: ""}"
 					thumbnail {
 						url = titan.image ?: ""
 					}
