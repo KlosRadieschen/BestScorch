@@ -56,7 +56,7 @@ object RollCommand : SlashCommand(
 		val content = buildString {
 			if (reason != null) appendLine("Rolling for: *$reason*")
 
-			appendLine("# ${roll + modifier} / $max")
+			appendLine("*${roll + modifier} / $max*")
 
 			if (modifier > 0) appendLine("-# $roll + $modifier")
 			if (modifier < 0) appendLine("-# $roll - ${modifier.absoluteValue}")

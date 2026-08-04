@@ -1,5 +1,6 @@
 package messages
 
+import Config
 import characters.Character
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
@@ -9,7 +10,6 @@ import dev.kord.core.entity.channel.GuildMessageChannel
 import dev.kord.core.entity.channel.thread.ThreadChannel
 import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.core.on
-import io.github.cdimascio.dotenv.Dotenv
 import io.github.classgraph.ClassGraph
 import messages.responders.Responder
 
@@ -47,6 +47,7 @@ object MessageHandler {
 				characters.forEach { character -> character.responder.respondWithQueue(message) }
 			} catch (e: Exception) {
 				val channel = kord.getChannelOf<GuildMessageChannel>(Config.Snowflakes.Channels.botChannelID)!!
+				e.printStackTrace()
 				channel.createMessage("<@384422339393355786> ERROR: ${e.message} <:verger:1225937868023795792>")
 			}
 		}
