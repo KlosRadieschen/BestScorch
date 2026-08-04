@@ -1,9 +1,10 @@
 package ai
 
-import Config
+import Config.Snowflakes.ahaNickname
 import ai.helpers.MessageQueue
 import com.openai.models.chat.completions.ChatCompletionCreateParams
 import dev.kord.core.entity.Message
+import dev.kord.core.entity.effectiveName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.sync.Mutex
@@ -31,7 +32,8 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 			"<Author name>: <Message>"
 			but you do not need to prepend your own name.
 		""".trimIndent(),
-		userMessage = message)
+		userMessage = message
+	)
 
 	suspend fun generateMessage(messageHistory: MessageQueue, prompt: String, userMessage: Message): String? {
 		mutex.withLock {
@@ -44,15 +46,20 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 				MessageQueue.Type.UserMessage
 			)
 
-			val authorName = userMessage.author?.asMember(Config.Snowflakes.ahaGuildID)?.effectiveName
-				?: userMessage.data.author.username
-
 			messageHistory.messages.forEach {
 				when (it.type) {
-					MessageQueue.Type.UserMessage -> paramsBuilder.addUserMessage("$authorName: ${it.msg.content}")
-					MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("$authorName: ${it.msg.content}")
+					MessageQueue.Type.UserMessage -> paramsBuilder.addUserMessage("${it.msg.author!!.ahaNickname()}: ${it.msg.content}")
+					MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("${it.msg.author!!.ahaNickname()}: ${it.msg.content}")
 				}
 			}
+
+			println(buildString {
+				repeat(5) { appendLine() }
+				appendLine(prompt)
+				appendLine()
+				appendLine(messageHistory.messages.joinToString("\n") { "${it.msg.author!!.effectiveName}: ${it.msg.content}" })
+				repeat(5)  { appendLine() }
+			})
 
 			val params = paramsBuilder.build()
 
@@ -67,8 +74,6 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 				?.message()
 				?.content()
 				?.getOrNull()
-
-			// messageHistory.addMessage("$name: $aiMessage", MessageQueue.Type.UserMessage)
 
 			return aiMessage
 		}
