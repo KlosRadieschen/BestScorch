@@ -4,7 +4,6 @@ import Config.Snowflakes.ahaNickname
 import ai.helpers.MessageQueue
 import com.openai.models.chat.completions.ChatCompletionCreateParams
 import dev.kord.core.entity.Message
-import dev.kord.core.entity.effectiveName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.sync.Mutex
@@ -52,14 +51,6 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 					MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("${it.msg.author!!.ahaNickname()}: ${it.msg.content}")
 				}
 			}
-
-			print(buildString {
-				repeat(5) { appendLine() }
-				appendLine(prompt)
-				appendLine()
-				appendLine(messageHistory.messages.joinToString("\n") { "${it.msg.author!!.effectiveName}: ${it.msg.content}" })
-				repeat(5)  { appendLine() }
-			})
 
 			val params = paramsBuilder.build()
 
