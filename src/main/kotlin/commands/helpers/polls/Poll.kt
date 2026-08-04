@@ -14,7 +14,7 @@ import dev.kord.core.entity.Message
 import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.entity.User
 import dev.kord.rest.builder.message.embed
-import java.lang.Thread.sleep
+import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Instant
 
@@ -57,7 +57,7 @@ class Poll (
 					autoArchiveDuration = ArchiveDuration.Week
 				}
 
-				sleep(duration.inWholeMilliseconds)
+				delay(duration)
 
 				msg = channel.getMessageOrNull(msg.id)
 
