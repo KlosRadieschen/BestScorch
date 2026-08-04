@@ -47,8 +47,8 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 
 			messageHistory.messages.forEach {
 				when (it.type) {
-					MessageQueue.Type.UserMessage -> paramsBuilder.addUserMessage("${it.msg.author!!.ahaNickname()}: ${it.msg.content}")
-					MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("${it.msg.author!!.ahaNickname()}: ${it.msg.content}")
+					MessageQueue.Type.UserMessage -> paramsBuilder.addUserMessage("${it.msg.author?.ahaNickname() ?: it.msg.data.author.username}: ${it.msg.content}")
+					MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("${it.msg.author?.ahaNickname() ?: it.msg.data.author.username}: ${it.msg.content}")
 				}
 			}
 
