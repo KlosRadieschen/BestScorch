@@ -53,7 +53,7 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 				}
 			}
 
-			println(buildString {
+			print(buildString {
 				repeat(5) { appendLine() }
 				appendLine(prompt)
 				appendLine()
