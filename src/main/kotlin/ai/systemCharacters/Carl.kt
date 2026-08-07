@@ -72,7 +72,7 @@ Verdict MUST be one of the following:
 %s
 """
 
-	suspend fun judgeFate(
+	fun judgeFate(
 		mode: FateMode,
 		actorName: String,
 		targetName: String,
