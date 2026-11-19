@@ -28,7 +28,7 @@ object RandomReactor : Responder(
 			1227319169876496404,
 			1260981505597898895,
 			1467617301439189083,
-			1301868886362165359
+			1301868886362165359,
 		)
 
 		val emoji = kord.getGuild(Config.Snowflakes.ahaGuildID).getEmoji(Snowflake(ids.random()))

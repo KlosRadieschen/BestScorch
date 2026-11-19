@@ -9,7 +9,7 @@ abstract class LLM {
 	companion object {
 		val token = Config.Tokens.mistralToken
 		const val BASE_URL = "https://api.mistral.ai/v1/"
-		const val MODEL_ID = "mistral-medium-2508"
+		const val MODEL_ID = "mistral-medium-latest"
 	}
 
 	val client: OpenAIClient = OpenAIOkHttpClient.builder()
