@@ -2,7 +2,7 @@ package ai.helpers
 
 import dev.kord.core.entity.Message
 
-class MessageQueueMessage(val msg: Message, val type: MessageQueue.Type)
+class MessageQueueMessage(val msg: Message, val type: MessageQueue.Type, val speaker: String? = null)
 
 class MessageQueue {
 	enum class Type {

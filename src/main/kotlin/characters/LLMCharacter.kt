@@ -2,6 +2,7 @@ package characters
 
 import ai.CharacterLLM
 import ai.helpers.MessageQueue
+import ai.helpers.MessageQueueMessage
 import commands.helpers.Execution.isExecuted
 import dev.kord.core.behavior.reply
 import messages.responders.Responder
@@ -40,7 +41,7 @@ abstract class LLMCharacter (
 					CharacterLLM.messageQueue.messages.last().msg
 				)
 
-				CharacterLLM.messageQueue.addMessage(message, MessageQueue.Type.UserMessage)
+				CharacterLLM.messageQueue.addMessage(MessageQueueMessage(message, MessageQueue.Type.AIMessage, name))
 
 				if (chunks.size > 1)
 					chunks.drop(1).forEach { c -> message.reply { content = c } }

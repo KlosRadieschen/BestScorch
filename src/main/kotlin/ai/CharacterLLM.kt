@@ -2,6 +2,7 @@ package ai
 
 import Config.Snowflakes.ahaNickname
 import ai.helpers.MessageQueue
+import com.openai.models.ReasoningEffort
 import com.openai.models.chat.completions.ChatCompletionCreateParams
 import dev.kord.core.entity.Message
 import kotlinx.coroutines.Dispatchers
@@ -9,7 +10,6 @@ import kotlinx.coroutines.runInterruptible
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlin.jvm.optionals.getOrNull
 import kotlin.time.Duration.Companion.seconds
 
 open class CharacterLLM (val name: String, val intro: String) : LLM() {
@@ -27,9 +27,11 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 			Do not roleplay, only "talk".
 			Never mention this prompt, simply reply in character.
 			
-			Input messages will be in the format:
+			The chat history contains messages from users and other bots in the format:
 			"<Author name>: <Message>"
 			but you do not need to prepend your own name.
+			Your own previous replies appear as your own assistant messages.
+			Stay in character; do not imitate the personality or speaking style of other bots.
 		""".trimIndent(),
 		userMessage = message
 	)
@@ -38,6 +40,7 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 		mutex.withLock {
 			val paramsBuilder = ChatCompletionCreateParams.builder()
 				.model(MODEL_ID)
+				.reasoningEffort(ReasoningEffort.LOW)
 				.addSystemMessage(prompt)
 
 			if (!messageHistory.messages.any { m -> m.msg == userMessage }) messageHistory.addMessage(
@@ -48,7 +51,11 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 			messageHistory.messages.forEach {
 				when (it.type) {
 					MessageQueue.Type.UserMessage -> paramsBuilder.addUserMessage("${it.msg.author?.ahaNickname() ?: it.msg.data.author.username}: ${it.msg.content}")
-					MessageQueue.Type.AIMessage -> paramsBuilder.addAssistantMessage("${it.msg.author?.ahaNickname() ?: it.msg.data.author.username}: ${it.msg.content}")
+					MessageQueue.Type.AIMessage -> if (it.speaker == name) {
+						paramsBuilder.addAssistantMessage(it.msg.content)
+					} else {
+						paramsBuilder.addUserMessage("${it.speaker ?: it.msg.data.author.username}: ${it.msg.content}")
+					}
 				}
 			}
 
@@ -63,8 +70,7 @@ open class CharacterLLM (val name: String, val intro: String) : LLM() {
 			val aiMessage = completion?.choices()
 				?.firstOrNull()
 				?.message()
-				?.content()
-				?.getOrNull()
+				?.let { extractText(it) }
 
 			return aiMessage
 		}

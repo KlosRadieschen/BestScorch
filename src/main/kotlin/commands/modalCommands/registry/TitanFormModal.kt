@@ -26,7 +26,7 @@ object TitanFormModal : ModalCommand(
 						}
 
 						"military" -> {
-							it.primaryWeapon = textInputs["primaryweapon"]?.value.orEmpty()
+							it.primaryWeapon = textInputs["primary weapon"]?.value.orEmpty()
 							it.ordinance = textInputs["ordinance"]?.value.orEmpty()
 							it.defensive = textInputs["defensive ability"]?.value.orEmpty()
 							it.tactical = textInputs["tactical ability"]?.value.orEmpty()
@@ -35,7 +35,7 @@ object TitanFormModal : ModalCommand(
 
 						"lore" -> {
 							it.description = textInputs["description"]?.value.orEmpty()
-							it.design = textInputs["design"]?.value.orEmpty()
+							it.design = textInputs["design/appearance"]?.value.orEmpty()
 							it.misc = textInputs["misc"]?.value.orEmpty()
 						}
 					}

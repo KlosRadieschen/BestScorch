@@ -6,7 +6,7 @@ import commands.helpers.polls.PollResponses
 import commands.slashCommands.SlashCommand
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.rest.builder.interaction.string
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
@@ -56,9 +56,7 @@ object PollCommand : SlashCommand(
 	            "We are currently in the command \"poll\" and the user entered an invalid time format for the duration. Explain ISO-8601 without mentioning its name.") } as Duration
 		)
 
-		coroutineScope {
-			launch { poll.start(kord, user) }
-		}
+		GlobalScope.launch { poll.start(kord, user) }
 
 		response.respond { content = "Poll created" }
 

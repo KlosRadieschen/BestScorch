@@ -2,6 +2,7 @@ package messages.responders.registry
 
 import ai.CharacterLLM
 import ai.helpers.MessageQueue
+import ai.helpers.MessageQueueMessage
 import ai.systemCharacters.Scorch
 import commands.helpers.Execution.isExecuted
 import dev.kord.core.behavior.channel.withTyping
@@ -29,7 +30,7 @@ object ScorchResponder : Responder(
 				val botMessage =
 					ref.reply { content = chunks[0] }
 
-				CharacterLLM.messageQueue.addMessage(botMessage, MessageQueue.Type.UserMessage)
+				CharacterLLM.messageQueue.addMessage(MessageQueueMessage(botMessage, MessageQueue.Type.AIMessage, Scorch.name))
 
 				if (chunks.size > 1)
 					chunks.drop(1).forEach { c -> botMessage.reply { content = c } }
